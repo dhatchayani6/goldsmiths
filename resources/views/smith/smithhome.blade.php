@@ -77,6 +77,7 @@
             <li><a href="{{route('jewellery_page')}}">Add Jewelry</a></li>
             <li><a href="#">Manage Jewelry</a></li>
             <li><a href="#">Customer Orders</a></li>
+            <li><a href="{{route('jewel.queries')}}">User Queries</a></li>
             <li><a href="{{ route('logout') }}">Logout</a></li>
         </ul>
     </div>

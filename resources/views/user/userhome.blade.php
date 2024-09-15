@@ -86,6 +86,8 @@
             <li><a href="#">Orders</a></li>
             <li><a href="#">Messages</a></li>
             <li><a href="#">Settings</a></li>
+            <li>    <a href="{{ url('/jewel/${jewel.id}') }}" class="btn btn-info">Status</a>
+            </li>
             <li><a href="#">Help</a></li>
         </ul>
     </div>

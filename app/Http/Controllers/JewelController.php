@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JewelQuery;
 use Illuminate\Http\Request;
 use App\Models\Jewel;
 
@@ -72,5 +73,27 @@ class JewelController extends Controller
         return view('user.view', compact('jewel'));
     }
     
+    public function showQueries()
+    {
+        $queries = JewelQuery::all(); // Fetch all queries from the 'queries' table.
+        return view('smith.show_queries', compact('queries'));
+    }
 
+    public function accept($id)
+    {
+        $query = JewelQuery::findOrFail($id);
+        $query->status = 'Accepted'; // Adjust according to your status field
+        $query->save();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function reject($id)
+    {
+        $query = JewelQuery::findOrFail($id);
+        $query->status = 'Rejected'; // Adjust according to your status field
+        $query->save();
+
+        return response()->json(['success' => true]);
+    }
 }
