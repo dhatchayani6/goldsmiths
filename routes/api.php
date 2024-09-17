@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JewelController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PurchaseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,4 +32,7 @@ Route::post( '/jewel_store', action: [JewelController::class, 'store_jewel'])->n
 //user part
 Route::get('/fetch_jewel', action: [UserController::class, 'fetch_jewels'])->name('fetchjewel');
 
-Route::post('/api/orders', [OrderController::class, 'createOrder']);
+
+
+Route::post('/api/orders', action: [PurchaseController::class, 'createOrder'])->name('paypal.createOrder');
+Route::post('/api/orders/{orderId}/capture', [PurchaseController::class, 'captureOrder'])->name('paypal.capture');

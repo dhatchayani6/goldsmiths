@@ -14,16 +14,19 @@ class Purchase extends Model
         return $this->belongsTo(Jewel::class);
     }
 
-
     protected $fillable = [
-       'jewel_id',
+        'jewel_id',
+        'amount',
         'customer_name',
         'email',
         'mobile_number',
         'zip_code',
         'address',
         'payment_method',
-        'transaction_id',
-        'status',
+        'card_name',
+        'card_number',
+        'expiry_date',
+        'cvv',
+        'paypal_order_id',
     ];
 }

@@ -13,15 +13,18 @@ return new class extends Migration
     {
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('jewel_id')->constrained('jewels')->onDelete('cascade');
+            $table->foreignId('jewel_id')->constrained('jewels')->onDelete('cascade'); // Assumes a 'jewels' table exists
             $table->string('customer_name');
             $table->string('email');
             $table->string('mobile_number');
             $table->string('zip_code');
             $table->text('address');
-            $table->enum('payment_method', ['cod', 'paypal', 'credit_card']);
-            $table->string('transaction_id')->nullable();
-            $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
+            $table->string('payment_method'); // <-- Inspect this line
+           $table->string('card_name')->nullable(); // Nullable for cash on delivery and PayPal
+            $table->string('card_number')->nullable(); // Nullable for cash on delivery and PayPal
+            $table->string('expiry_date')->nullable(); // Nullable for cash on delivery and PayPal
+            $table->string('cvv')->nullable(); // Nullable for cash on delivery and PayPal
+            $table->string('paypal_order_id')->nullable(); // Store PayPal order ID if using PayPal
             $table->timestamps();
         });
     }

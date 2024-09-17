@@ -78,6 +78,7 @@
             <li><a href="#">Manage Jewelry</a></li>
             <li><a href="#">Customer Orders</a></li>
             <li><a href="{{route('jewel.queries')}}">User Queries</a></li>
+            <li><a href="{{ route('get_purchases') }}">Payment Status</a></li>
             <li><a href="{{ route('logout') }}">Logout</a></li>
         </ul>
     </div>
