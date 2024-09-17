@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\JewelQueryController;
+use App\Http\Controllers\PayPalTransactionController;
 use App\Http\Controllers\PurchaseController;
 
 /*
@@ -60,3 +61,6 @@ Route::get('/jewel/status/{id}', [UserController::class, 'showJewelStatus'])->na
 Route::get('/purchasepageshow/{id}',[PurchaseController::class,'show_purchase']);
 
 Route::post('/addpurchase',[PurchaseController::class,'storepurchasedetails'])->name('purchase.store');
+
+Route::post('/create-order', [PayPalTransactionController::class, 'createOrder']);
+Route::post('/capture-order/{orderId}', [PayPalTransactionController::class, 'captureOrder']);

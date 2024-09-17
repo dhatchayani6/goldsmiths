@@ -47,4 +47,8 @@ class PurchaseController extends Controller
         $fetchjewel = Jewel::all();
         return response()->json($fetchjewel);
     }
+
+    public function order(){
+        
+    }
 }
