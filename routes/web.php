@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\JewelQueryController;
+use App\Http\Controllers\PurchaseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,5 +57,6 @@ Route::get('/jewel/{id}', [UserController::class,'show_jewe'])->name('jewel.show
 Route::get('/jewel/status', [UserController::class, 'showJewelStatus'])->name('jewel.status');
 
 Route::get('/jewel/status/{id}', [UserController::class, 'showJewelStatus'])->name('jewel.status');
+Route::get('/purchasepageshow/{id}',[PurchaseController::class,'show_purchase']);
 
-
+Route::post('/addpurchase',[PurchaseController::class,'storepurchasedetails'])->name('purchase.store');
