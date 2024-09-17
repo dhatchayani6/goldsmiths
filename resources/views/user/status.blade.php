@@ -27,7 +27,7 @@
                         <p class="jewel-description">{{ $jewelle->description }}</p>
                         <p class="jewel-price">Price: ${{ $jewelle->price }}</p>
                         <p class="jewel-status">Status: {{ $jewelle->status }}</p> <!-- Displaying jewel status -->
-                        <a href="#" class="btn btn-success btn-purchase">Purchase</a>
+                        <a href="{{url('purchasepageshow')}}" class="btn btn-success btn-purchase">Purchase</a>
                     </div>
                 </div>
             </div>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $jewel->name }} Details</title>
+    <title> Details</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <!-- jQuery -->
@@ -28,7 +28,7 @@
                         <h1 class="jewel-name">{{ $jewel->name }}</h1>
                         <p class="jewel-description">{{ $jewel->description }}</p>
                         <p class="jewel-price">Price: ${{ $jewel->price }}</p>
-                        <a href="#" class="btn btn-success btn-purchase">Purchase</a>
+                        <a href="{{ url('purchasepageshow', parameters: ['id' => $jewel->id]) }}" class="btn btn-success btn-purchase">Purchase</a>
                     </div>
                 </div>
             </div>
