@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\JewelQueryController;
-use App\Http\Controllers\OrderController;
+use App\Http\Controllers\UserQueriesController;
 use App\Http\Controllers\PurchaseController;
 
 /*
@@ -66,3 +66,8 @@ Route::post('/api/orders', action: [PurchaseController::class, 'createOrder'])->
 Route::post('/api/orders/{orderId}/capture', [PurchaseController::class, 'captureOrder'])->name('paypal.capture');
 
 Route::get('/get_purchase',[PurchaseController::class,'getpurchase'])->name('get_purchases');
+Route::post('/update-status', [PurchaseController::class, 'updateStatus'])->name('update.status');
+
+Route::get('/customize-jewel/{id}', [UserQueriesController::class, 'create'])->name('customize.jewel');
+Route::post('/customize_design',[UserQueriesController::class,'store_customize'])->name('store.customizedesign');
+Route::get('/custom-queries', [UserQueriesController::class, 'getCustomQueries'])->name('getcustomqueries');

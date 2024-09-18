@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UserQueries;
 use Illuminate\Http\Request;
 use App\Models\Purchase;
 use App\Models\Jewel;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Validator;
 
 
 class PurchaseController extends Controller
@@ -27,35 +29,58 @@ class PurchaseController extends Controller
 
     public function storepurchasedetails(Request $request)
     {
-         // Validate request data
-    $validatedData = $request->validate([
+       // Validate the incoming request
+       $validator = Validator::make($request->all(), [
         'jewel_id' => 'required|integer',
-        'customer_name' => 'required|string|min:2',
+        'amount' => 'required|numeric',
+        'customer_name' => 'required|string|max:255',
         'email' => 'required|email',
-        'mobile_number' => 'required|regex:/^[0-9]{10}$/',
-        'zip_code' => 'required|regex:/^[0-9]{5}$/',
+        'mobile_number' => 'required|string|max:15',
+        'zip_code' => 'required|string|max:10',
         'address' => 'required|string',
-        'payment_method' => 'required|string',
-        'paypal_order_id' => 'nullable|string', // Only if applicable
-        'amount' => 'required|numeric', // Ensure amount is validated as numeric
+        'payment_method' => 'required|string|in:card,razorpay,cash_on_delivery',
+        'card_name' => 'nullable|string|max:255',
+        'card_number' => 'nullable|string|max:19',
+        'expiry_date' => 'nullable|string|max:7',
+        'cvv' => 'nullable|string|max:4',
+        'razorpay_payment_id' => 'nullable|string|max:255',
     ]);
 
-    // Save data to the database
-    $purchase = new Purchase();
-    $purchase->jewel_id = $validatedData['jewel_id'];
-    $purchase->customer_name = $validatedData['customer_name'];
-    $purchase->email = $validatedData['email'];
-    $purchase->mobile_number = $validatedData['mobile_number'];
-    $purchase->zip_code = $validatedData['zip_code'];
-    $purchase->address = $validatedData['address'];
-    $purchase->payment_method = $validatedData['payment_method'];
-    $purchase->paypal_order_id = $validatedData['paypal_order_id'];
-    $purchase->amount = $validatedData['amount']; // Store the amount
-    $purchase->save();
-
-    return redirect()->back()->with('success', 'Purchase successful!');
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
     }
 
+    // Create a new Purchase record
+    $purchase = new Purchase();
+    $purchase->jewel_id = $request->input('jewel_id');
+    $purchase->amount = $request->input('amount');
+    $purchase->customer_name = $request->input('customer_name');
+    $purchase->email = $request->input('email');
+    $purchase->mobile_number = $request->input('mobile_number');
+    $purchase->zip_code = $request->input('zip_code');
+    $purchase->address = $request->input('address');
+    $purchase->payment_method = $request->input('payment_method');
+    
+    // Handle additional fields based on payment method
+    if ($request->input('payment_method') == 'card') {
+        $purchase->card_name = $request->input('card_name');
+        $purchase->card_number = $request->input('card_number');
+        $purchase->expiry_date = $request->input('expiry_date');
+        $purchase->cvv = $request->input('cvv');
+    }
+
+    if ($request->input('payment_method') == 'razorpay') {
+        $purchase->razorpay_payment_id = $request->input('razorpay_payment_id');
+    }
+
+    // Save the Purchase record
+    $purchase->save();
+
+    // Return a success response
+    return response()->json(['message' => 'Purchase completed successfully!'], 200);
+
+    }
+    
     public function fetch_jewel()
     {
         $fetchjewel = Jewel::all();
@@ -66,55 +91,32 @@ class PurchaseController extends Controller
         $fetchpurchase = Purchase::all();
         return view('smith.payment-status',compact('fetchpurchase')); 
     }
-
-    private $paypalClientId;
-    private $paypalClientSecret;
-
-    public function __construct()
+    public function updateStatus(Request $request)
     {
-        $this->paypalClientId = env('Aew2g2XOHD-s3IdBaQuVPFocouusQwNSMeNUL9n6TEAGowSRwVG5Q3Ax3ojl0irQqZPd4gVThfLAUSsk');
-        $this->paypalClientSecret = env('Aew2g2XOHD-s3IdBaQuVPFocouusQwNSMeNUL9n6TEAGowSRwVG5Q3Ax3ojl0irQqZPd4gVThfLAUSsk');
-    }
-    private function getAccessToken()
-    {
-        $response = Http::withBasicAuth($this->paypalClientId, $this->paypalClientSecret)
-            ->post('https://api-m.sandbox.paypal.com/v1/oauth2/token', [
-                'grant_type' => 'client_credentials',
-            ]);
+        // Validate the incoming request
+        $request->validate([
+            'status' => 'required|in:pending,complete,failed',
+            'id' => 'required|integer|exists:purchases,id'
+        ]);
 
-        $data = $response->json();
-        return $data['access_token'];
-    }
+        // Find the purchase by ID
+        $purchase = Purchase::find($request->input('id'));
 
-    public function createOrder(Request $request)
-    {
-        $accessToken = $this->getAccessToken();
+        if ($purchase) {
+            // Update the status
+            $purchase->status = $request->input('status');
+            $purchase->save();
+            
+            return response()->json(['message' => 'Status updated successfully!']);
+        }
 
-        $response = Http::withToken($accessToken)
-            ->post('https://api-m.sandbox.paypal.com/v2/checkout/orders', [
-                'intent' => 'CAPTURE',
-                'purchase_units' => [
-                    [
-                        'amount' => [
-                            'currency_code' => 'USD',
-                            'value' => 1, // Replace with actual price
-                        ],
-                    ],
-                ],
-            ]);
-
-        $orderData = $response->json();
-        return response()->json(['id' => $orderData['id']]);
+        return response()->json(['message' => 'Purchase not found.'], 404);
     }
 
-    public function captureOrder($orderId)
-    {
-        $accessToken = $this->getAccessToken();
 
-        $response = Http::withToken($accessToken)
-            ->post("https://api-m.sandbox.paypal.com/v2/checkout/orders/{$orderId}/capture");
-
-        $captureData = $response->json();
-        return response()->json($captureData);
+    public function getcustomize(){
+        return view('user.customize-jewel');
     }
+
+   
 }

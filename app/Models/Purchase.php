@@ -27,6 +27,6 @@ class Purchase extends Model
         'card_number',
         'expiry_date',
         'cvv',
-        'paypal_order_id',
+        'razorpay_payment_id',
     ];
 }

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('purchases', function (Blueprint $table) {
-            $table->decimal('amount')->after('jewel_id'); // Adjust the column position as needed
+            $table->string('status')->default('pending');
         });
     }
 

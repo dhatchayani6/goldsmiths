@@ -1,7 +1,7 @@
 <!-- Footer -->
-<footer class="text-center text-lg-start bg-body-tertiary text-muted " style="backgroun:#f0f0f0" >
+<footer class="text-center text-lg-start bg-light text-muted" style="background-color: #f0f0f0;">
   <!-- Section: Social media -->
-  <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom" >
+  <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
     <!-- Left -->
     <div class="me-5 d-none d-lg-block">
       <span>Get connected with us on social networks:</span>
@@ -34,7 +34,7 @@
   <!-- Section: Social media -->
 
   <!-- Section: Links  -->
-  <section class="">
+  <section>
     <div class="container text-center text-md-start mt-5">
       <!-- Grid row -->
       <div class="row mt-3">
@@ -42,7 +42,7 @@
         <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
           <!-- Content -->
           <h6 class="text-uppercase fw-bold mb-4">
-            <i class="fas fa-gem me-3"></i>Company name
+            <i class="fas fa-gem me-3"></i>Company Name
           </h6>
           <p>
             Here you can use rows and columns to organize your footer content. Lorem ipsum
@@ -76,7 +76,7 @@
         <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
           <!-- Links -->
           <h6 class="text-uppercase fw-bold mb-4">
-            Useful links
+            Useful Links
           </h6>
           <p>
             <a href="#!" class="text-reset">Pricing</a>

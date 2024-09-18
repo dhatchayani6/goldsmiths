@@ -20,41 +20,50 @@
                                     </ul>
                                 </div>
                             @endif
-                            <div class="form-group">
-                                <label for="jewelryName">Jewelry Name</label>
-                                <input type="text" class="form-control" id="jewelryName" name="jewelryName"
-                                    placeholder="Enter jewelry name" required>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="jewelryName">Jewelry Name</label>
+                                    <input type="text" class="form-control" id="jewelryName" name="jewelryName"
+                                        placeholder="Enter jewelry name" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="jewelryType">Jewelry Type</label>
+                                    <select class="form-control" id="jewelryType" name="jewelryType" required>
+                                        <option value="">Select type</option>
+                                        <option value="Necklace">Necklace</option>
+                                        <option value="Ring">Ring</option>
+                                        <option value="Bracelet">Bracelet</option>
+                                        <option value="Earrings">Earrings</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="jewelryType">Jewelry Type</label>
-                                <select class="form-control" id="jewelryType" name="jewelryType" required>
-                                    <option value="">Select type</option>
-                                    <option value="Necklace">Necklace</option>
-                                    <option value="Ring">Ring</option>
-                                    <option value="Bracelet">Bracelet</option>
-                                    <option value="Earrings">Earrings</option>
-                                    <option value="Other">Other</option>
-                                </select>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="jewelryWeight">Weight (in grams)</label>
+                                    <input type="number" class="form-control" id="jewelryWeight" name="jewelryWeight"
+                                        placeholder="Enter weight" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="jewelryPrice">Price</label>
+                                    <input type="number" class="form-control" id="jewelryPrice" name="jewelryPrice"
+                                        placeholder="Enter price" required>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="jewelryWeight">Weight (in grams)</label>
-                                <input type="number" class="form-control" id="jewelryWeight" name="jewelryWeight"
-                                    placeholder="Enter weight" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="jewelryPrice">Price</label>
-                                <input type="number" class="form-control" id="jewelryPrice" name="jewelryPrice"
-                                    placeholder="Enter price" required>
-                            </div>
+
                             <div class="form-group">
                                 <label for="jewelryDescription">Description</label>
                                 <textarea class="form-control" id="jewelryDescription" name="jewelryDescription" rows="3"
                                     placeholder="Enter jewelry description"></textarea>
                             </div>
+
                             <div class="form-group">
                                 <label for="jewelryImage">Upload Image</label>
                                 <input type="file" class="form-control-file" id="jewelryImage" name="jewelryImage" accept="image/*">
                             </div>
+                            
                             <button type="submit" class="btn btn-primary">Add Jewelry</button>
                         </form>
                     </div>

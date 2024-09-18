@@ -1,260 +1,236 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Purchase</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <meta name="csrf-token" content="{{ csrf_token() }}"> <!-- CSRF token meta tag -->
+    <title>Purchase Form</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
-        body {
-            background-color: #f8f9fa;
+        .hidden {
+            display: none;
         }
-        .container {
-            max-width: 900px;
-        }
-        .form-section {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .form-section h4 {
-            margin-bottom: 20px;
-        }
-        .form-section .btn-primary {
-            background-color: #007bff;
-            border: none;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-        .form-section .btn-primary:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
-        }
+
         .alert {
-            margin-bottom: 20px;
+            margin-top: 20px;
         }
-        /* Animation for form field focus */
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
-            transition: border-color 0.3s, box-shadow 0.3s;
+
+        /* Keyframe animations for form fields */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
-        /* Fade-in effect for sections */
+
         .fade-in {
-            opacity: 0;
-            transition: opacity 0.5s ease-in;
+            animation: fadeIn 1s ease-in;
         }
-        .fade-in.show {
-            opacity: 1;
+
+        /* Keyframe animation for modal */
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .slide-up {
+            animation: slideUp 0.5s ease-out;
         }
     </style>
-    <!-- jQuery CDN -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
+
 <body>
-    <div class="mt-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 col-md-10">
-                <div class="form-section">
-                    <h2 class="text-center mb-4">Purchase</h2>
-                    
-                    @if (session('success'))
-                        <div class="alert alert-success">{{ session('success') }}</div>
-                    @endif
+    <div class="container mt-5">
+        <h2>Purchase Form</h2>
+        <button class="btn btn-primary">
+    <a href="{{ route('customize.jewel', ['id' => $fetchjewel]) }}" style="color: white; text-decoration: none;">Customize</a>
+</button>
+        <form id="purchase-form" class="fade-in" method="POST" action="{{ route('purchase.store') }}">
+            <!-- Display Jewel Name and Price -->
+            <div class="mb-4">
+                <h4 class="mb-2">Jewel Name: <strong>{{ $fetchjewel->name }}</strong></h4>
+                <p class="mb-3">Price: <strong>${{ $fetchjewel->price }}</strong></p>
+            </div>
 
-                    <form id="purchaseForm" action="{{ route('purchase.store') }}" method="POST">
-                        @csrf
+            <!-- Hidden input to store the jewel ID -->
+            <input type="hidden" name="jewel_id" value="{{ $fetchjewel->id }}">
+            <input type="hidden" name="amount" value="{{ $fetchjewel->price }}">
 
-                        <!-- Display Jewel Name and Price -->
-                        <div class="mb-4">
-                            <h4 class="mb-2">Jewel Name: <strong>{{ $fetchjewel->name }}</strong></h4>
-                            <p class="mb-3">Price: <strong>${{ $fetchjewel->price }}</strong></p>
-                        </div>
+            <!-- Customer Details -->
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="customer_name">Customer Name</label>
+                    <input type="text" class="form-control" id="customer_name" name="customer_name" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+            </div>
 
-                        <!-- Hidden input to store the jewel ID -->
-                        <input type="hidden" name="jewel_id" value="{{ $fetchjewel->id }}">
-                        <input type="hidden" name="amount" value="{{ $fetchjewel->price }}">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="mobile_number">Mobile Number</label>
+                    <input type="text" class="form-control" id="mobile_number" name="mobile_number" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="zip_code">Zip Code</label>
+                    <input type="text" class="form-control" id="zip_code" name="zip_code" required>
+                </div>
+            </div>
 
+            <div class="form-group">
+                <label for="address">Address</label>
+                <textarea class="form-control" id="address" name="address" required></textarea>
+            </div>
 
-                        <!-- Hidden input to store the PayPal Order ID -->
-                        <input type="hidden" name="paypal_order_id" id="paypal_order_id">
+            <!-- Payment Method -->
+            <div class="form-group">
+                <label for="payment_method">Payment Method</label>
+                <select class="form-control" id="payment_method" name="payment_method" required>
+                    <option value="">Select Payment Method</option>
+                    <option value="card">Credit/Debit Card</option>
+                    <option value="razorpay">Razorpay</option>
+                    <option value="cash_on_delivery">Cash on Delivery</option>
+                </select>
+            </div>
 
-                        <!-- Customer Details -->
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="customer_name" class="form-label">Your Name</label>
-                                <input type="text" class="form-control" id="customer_name" name="customer_name" required minlength="2" placeholder="Enter your name">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="email" class="form-label">Email Address</label>
-                                <input type="email" class="form-control" id="email" name="email" required placeholder="Enter your email">
-                            </div>
-                        </div>
+            <!-- Card Payment Fields -->
+            <div id="card-fields" class="hidden">
+                <div class="form-group">
+                    <label for="card_name">Cardholder Name</label>
+                    <input type="text" class="form-control" id="card_name" name="card_name">
+                </div>
+                <div class="form-group">
+                    <label for="card_number">Card Number</label>
+                    <input type="text" class="form-control" id="card_number" name="card_number">
+                </div>
+                <div class="form-group">
+                    <label for="expiry_date">Expiry Date</label>
+                    <input type="text" class="form-control" id="expiry_date" name="expiry_date">
+                </div>
+                <div class="form-group">
+                    <label for="cvv">CVV</label>
+                    <input type="text" class="form-control" id="cvv" name="cvv">
+                </div>
+            </div>
 
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="mobile_number" class="form-label">Mobile Number</label>
-                                <input type="tel" class="form-control" id="mobile_number" name="mobile_number" required pattern="[0-9]{10}" placeholder="Enter your mobile number">
-                                <small class="form-text text-muted">Please enter a 10-digit mobile number.</small>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="zip_code" class="form-label">Zip Code</label>
-                                <input type="text" class="form-control" id="zip_code" name="zip_code" required pattern="[0-9]{5}" placeholder="Enter your zip code">
-                                <small class="form-text text-muted">Please enter a 5-digit zip code.</small>
-                            </div>
-                        </div>
+            <!-- PayPal Payment Fields -->
+            <div id="paypal-fields" class="hidden">
+                <div class="form-group">
+                    <label for="paypal_order_id">PayPal Order ID</label>
+                    <input type="text" class="form-control" id="paypal_order_id" name="paypal_order_id">
+                </div>
+            </div>
 
-                        <div class="mb-3">
-                            <label for="address" class="form-label">Shipping Address</label>
-                            <textarea class="form-control" id="address" name="address" rows="3" required placeholder="Enter your shipping address"></textarea>
-                        </div>
+            <!-- Razorpay Payment Fields -->
+            <div id="razorpay-fields" class="hidden">
+                <div class="form-group">
+                    <label for="razorpay_payment_id">Razorpay Payment ID</label>
+                    <input type="text" class="form-control" id="razorpay_payment_id" name="razorpay_payment_id">
+                </div>
+            </div>
 
-                        <!-- Payment Method Selection -->
-                        <div class="mb-4">
-                            <label for="payment_method" class="form-label">Payment Method</label>
-                            <select id="payment_method" name="payment_method" class="form-select" required>
-                                <option value="cod">Cash on Delivery</option>
-                                <option value="paypal">Online Payment (PayPal)</option>
-                                <option value="creditcard">Online Payment (Credit Card)</option>
-                            </select>
-                        </div>
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
 
-                        <!-- PayPal Button Container -->
-                        <div id="paypal-button-container" class="d-none fade-in mb-4"></div>
-
-                        <!-- Credit Card Information -->
-                        <div id="credit_card_info" class="d-none fade-in">
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="card_name" class="form-label">Cardholder Name</label>
-                                    <input type="text" class="form-control" id="card_name" name="card_name" required placeholder="Enter cardholder name">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="card_number" class="form-label">Card Number</label>
-                                    <input type="text" class="form-control" id="card_number" name="card_number" required pattern="\d{13,16}" placeholder="Enter card number">
-                                    <small class="form-text text-muted">Card number should be between 13 and 16 digits.</small>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="expiry_date" class="form-label">Expiry Date</label>
-                                    <input type="text" class="form-control" id="expiry_date" name="expiry_date" required pattern="\d{2}/\d{2}" placeholder="MM/YY">
-                                    <small class="form-text text-muted">Enter in MM/YY format.</small>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="cvv" class="form-label">CVV</label>
-                                    <input type="text" class="form-control" id="cvv" name="cvv" required pattern="\d{3}" placeholder="Enter CVV">
-                                    <small class="form-text text-muted">CVV should be 3 digits.</small>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary w-100">Confirm Purchase</button>
-                    </form>
+        <!-- Modal for Success Message -->
+        <div class="modal fade slide-up" id="successModal" tabindex="-1" role="dialog"
+            aria-labelledby="successModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="successModalLabel">Success</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="successMessage">
+                        <!-- Success message will be injected here -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- PayPal JavaScript SDK -->
-    <script src="https://www.paypal.com/sdk/js?client-id=Aew2g2XOHD-s3IdBaQuVPFocouusQwNSMeNUL9n6TEAGowSRwVG5Q3Ax3ojl0irQqZPd4gVThfLAUSsk&components=buttons"></script>
+    <!-- JavaScript Section -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const paymentMethodSelect = document.getElementById('payment_method');
-            const paypalButtonContainer = document.getElementById('paypal-button-container');
-            const creditCardInfo = document.getElementById('credit_card_info');
-            const paypalOrderIdField = document.getElementById('paypal_order_id');
+        $(document).ready(function () {
+            const paymentMethodSelect = $("#payment_method");
+            const cardFields = $("#card-fields");
+            const razorpayFields = $("#razorpay-fields");
 
-            // Add fade-in class to sections initially
-            paypalButtonContainer.classList.add('fade-in');
-            creditCardInfo.classList.add('fade-in');
+            // Get the CSRF token from the meta tag
+            const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-            paymentMethodSelect.addEventListener('change', function () {
-                if (paymentMethodSelect.value === 'paypal') {
-                    paypalButtonContainer.classList.remove('d-none');
-                    creditCardInfo.classList.add('d-none');
-                    paypalButtonContainer.classList.add('show');
-                } else if (paymentMethodSelect.value === 'creditcard') {
-                    paypalButtonContainer.classList.add('d-none');
-                    creditCardInfo.classList.remove('d-none');
-                    creditCardInfo.classList.add('show');
-                } else {
-                    paypalButtonContainer.classList.add('d-none');
-                    creditCardInfo.classList.add('d-none');
+            function updatePaymentFields() {
+                const paymentMethod = paymentMethodSelect.val();
+
+                // Hide all payment fields initially
+                cardFields.addClass("hidden");
+                razorpayFields.addClass("hidden");
+
+                // Show fields based on selected payment method
+                if (paymentMethod === "card") {
+                    cardFields.removeClass("hidden");
+                } else if (paymentMethod === "razorpay") {
+                    razorpayFields.removeClass("hidden");
                 }
-            });
-
-            if (window.paypal && window.paypal.Buttons) {
-                window.paypal.Buttons({
-                    style: {
-                        shape: "rect",
-                        layout: "vertical",
-                        color: "gold",
-                        label: "paypal",
-                    },
-                    createOrder: async function () {
-                        try {
-                            const response = await fetch("/api/orders", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
-                                body: JSON.stringify({
-                                    item: {
-                                        id: "{{ $fetchjewel->id }}", // Replace with actual product ID
-                                        quantity: 1
-                                    }
-                                }),
-                            });
-
-                            if (!response.ok) {
-                                throw new Error(`HTTP error! Status: ${response.status}`);
-                            }
-
-                            const orderData = await response.json();
-                            return orderData.id;
-                        } catch (error) {
-                            console.error('Error creating PayPal order:', error);
-                            alert('There was an error creating the PayPal order. Please try again.');
-                        }
-                    },
-                    onApprove: async function (data) {
-                        try {
-                            const response = await fetch(`/api/orders/${data.orderID}/capture`, {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
-                            });
-
-                            if (!response.ok) {
-                                throw new Error(`HTTP error! Status: ${response.status}`);
-                            }
-
-                            const orderData = await response.json();
-                            console.log("Capture result", orderData);
-                            if (orderData && orderData.status === 'COMPLETED') {
-                                alert(`Transaction completed successfully: ${orderData.id}`);
-                                // Set the PayPal Order ID in the hidden field
-                                paypalOrderIdField.value = orderData.id;
-                                // Submit the form
-                                document.getElementById('purchaseForm').submit();
-                            } else {
-                                alert('Transaction not completed successfully.');
-                            }
-                        } catch (error) {
-                            console.error('Error capturing PayPal payment:', error);
-                            alert('There was an error capturing the PayPal payment. Please try again.');
-                        }
-                    }
-                }).render("#paypal-button-container");
-            } else {
-                console.error("PayPal Buttons are not available.");
+                // No fields needed for "Cash on Delivery"
             }
+
+            paymentMethodSelect.on("change", updatePaymentFields);
+            updatePaymentFields(); // Initialize visibility on page load
+
+            $("#purchase-form").on("submit", function (event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                const formData = $(this).serialize();
+
+                $.ajax({
+                    url: "{{ route('purchase.store') }}", // Replace with your route name
+                    type: "POST",
+                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken // Add CSRF token to the headers
+                    },
+                    success: function (response) {
+                        $("#successMessage").html('<p>' + response.message + '</p>');
+                        $("#successModal").modal('show'); // Show success modal
+                        $("#purchase-form")[0].reset(); // Reset the form
+                    },
+                    error: function (xhr) {
+                        const errors = xhr.responseJSON.errors;
+                        let errorMessages = '<ul>';
+                        $.each(errors, function (key, value) {
+                            errorMessages += '<li>' + value[0] + '</li>';
+                        });
+                        errorMessages += '</ul>';
+                        $("#successMessage").html('<p>' + errorMessages + '</p>');
+                        $("#successModal").modal('show'); // Show error modal
+                    }
+                });
+            });
         });
     </script>
 </body>
+
 </html>
