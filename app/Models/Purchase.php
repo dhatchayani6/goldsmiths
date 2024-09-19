@@ -28,5 +28,7 @@ class Purchase extends Model
         'expiry_date',
         'cvv',
         'razorpay_payment_id',
+        'user_id', // Add this line
+
     ];
 }

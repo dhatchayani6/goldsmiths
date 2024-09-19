@@ -58,6 +58,8 @@ Route::get('/jewel/{id}', [UserController::class,'show_jewe'])->name('jewel.show
 Route::get('/jewel/status', [UserController::class, 'showJewelStatus'])->name('jewel.status');
 
 Route::get('/jewel/status/{id}', [UserController::class, 'showJewelStatus'])->name('jewel.status');
+Route::get('/showcustomizationqueries',[UserController::class,'showcustomizationqueries'])->name('show_customization_queries');
+
 Route::get('/purchasepageshow/{id}',[PurchaseController::class,'show_purchase']);
 
 Route::post('/addpurchase',[PurchaseController::class,'storepurchasedetails'])->name('purchase.store');
@@ -71,3 +73,7 @@ Route::post('/update-status', [PurchaseController::class, 'updateStatus'])->name
 Route::get('/customize-jewel/{id}', [UserQueriesController::class, 'create'])->name('customize.jewel');
 Route::post('/customize_design',[UserQueriesController::class,'store_customize'])->name('store.customizedesign');
 Route::get('/custom-queries', [UserQueriesController::class, 'getCustomQueries'])->name('getcustomqueries');
+
+Route::post('/query/accept/{id}', [UserQueriesController::class, 'accept']);
+Route::post('/query/reject/{id}', [UserQueriesController::class, 'reject']);
+

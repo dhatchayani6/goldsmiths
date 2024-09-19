@@ -4,20 +4,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}"> <!-- CSRF token meta tag -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Purchase Form</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap">
     <style>
-        .hidden {
-            display: none;
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 50px;
+        }
+
+        h2 {
+            margin-bottom: 30px;
+            color: #343a40;
+        }
+
+        .form-group label {
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
         }
 
         .alert {
             margin-top: 20px;
         }
 
-        /* Keyframe animations for form fields */
+        .hidden {
+            display: none;
+        }
+
+        .modal-header {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -27,46 +68,49 @@
                 opacity: 1;
             }
         }
-
-        .fade-in {
-            animation: fadeIn 1s ease-in;
-        }
-
-        /* Keyframe animation for modal */
-        @keyframes slideUp {
-            from {
-                transform: translateY(100%);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .slide-up {
-            animation: slideUp 0.5s ease-out;
-        }
     </style>
 </head>
 
 <body>
     <div class="container mt-5">
         <h2>Purchase Form</h2>
-        <button class="btn btn-primary">
-    <a href="{{ route('customize.jewel', ['id' => $fetchjewel]) }}" style="color: white; text-decoration: none;">Customize</a>
-</button>
+
         <form id="purchase-form" class="fade-in" method="POST" action="{{ route('purchase.store') }}">
-            <!-- Display Jewel Name and Price -->
             <div class="mb-4">
-                <h4 class="mb-2">Jewel Name: <strong>{{ $fetchjewel->name }}</strong></h4>
-                <p class="mb-3">Price: <strong>${{ $fetchjewel->price }}</strong></p>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="jewel_name">Jewel Name</label>
+                        <input type="text" class="form-control" id="jewel_name" name="jewel_name" value="{{ $fetchjewel->name }}" readonly>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="jewel_price">Price</label>
+                        <input type="text" class="form-control" id="jewel_price" name="jewel_price" value="{{ $fetchjewel->price }}" readonly>
+                    </div>
+                </div>
             </div>
 
-            <!-- Hidden input to store the jewel ID -->
             <input type="hidden" name="jewel_id" value="{{ $fetchjewel->id }}">
+            <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
             <input type="hidden" name="amount" value="{{ $fetchjewel->price }}">
+
+            <!-- Size and Quantity -->
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="size">Size</label>
+                    <input type="text" class="form-control" id="size" name="size" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="quantity">Quantity</label>
+                    <input type="number" class="form-control" id="quantity" name="quantity" min="1" required>
+                </div>
+            </div>
+
+            <div class="form-row mb-4">
+                <div class="form-group col-md-6">
+                    <label for="total_price">Total Price</label>
+                    <input type="text" class="form-control" id="total_price" name="total_price" value="${{ $fetchjewel->price }}" readonly>
+                </div>
+            </div>
 
             <!-- Customer Details -->
             <div class="form-row">
@@ -119,19 +163,11 @@
                 </div>
                 <div class="form-group">
                     <label for="expiry_date">Expiry Date</label>
-                    <input type="text" class="form-control" id="expiry_date" name="expiry_date">
+                    <input type="text" class="form-control" id="expiry_date" name="expiry_date" placeholder="MM/YY">
                 </div>
                 <div class="form-group">
                     <label for="cvv">CVV</label>
                     <input type="text" class="form-control" id="cvv" name="cvv">
-                </div>
-            </div>
-
-            <!-- PayPal Payment Fields -->
-            <div id="paypal-fields" class="hidden">
-                <div class="form-group">
-                    <label for="paypal_order_id">PayPal Order ID</label>
-                    <input type="text" class="form-control" id="paypal_order_id" name="paypal_order_id">
                 </div>
             </div>
 
@@ -148,8 +184,7 @@
         </form>
 
         <!-- Modal for Success Message -->
-        <div class="modal fade slide-up" id="successModal" tabindex="-1" role="dialog"
-            aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal fade slide-up" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -158,9 +193,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body" id="successMessage">
-                        <!-- Success message will be injected here -->
-                    </div>
+                    <div class="modal-body" id="successMessage"></div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
@@ -177,28 +210,37 @@
             const paymentMethodSelect = $("#payment_method");
             const cardFields = $("#card-fields");
             const razorpayFields = $("#razorpay-fields");
+            const jewelPrice = parseFloat($("#jewel_price").val().replace(/[^0-9.-]+/g,"")); // Get jewel price
+            const quantityInput = $("#quantity");
+            const totalPriceInput = $("#total_price");
 
-            // Get the CSRF token from the meta tag
-            const csrfToken = $('meta[name="csrf-token"]').attr('content');
+            function updateTotalPrice() {
+                const quantity = parseInt(quantityInput.val());
+                if (!isNaN(quantity) && quantity > 0) {
+                    const totalPrice = jewelPrice * quantity; // Calculate total price
+                    totalPriceInput.val(`Rs.${totalPrice.toFixed(0)}`); // Update total price input
+                } else {
+                    totalPriceInput.val(`Rs.${jewelPrice.toFixed(0)}`); // Reset if quantity is invalid
+                }
+            }
+
+            quantityInput.on("input", updateTotalPrice); // Recalculate total price on quantity change
 
             function updatePaymentFields() {
                 const paymentMethod = paymentMethodSelect.val();
-
-                // Hide all payment fields initially
                 cardFields.addClass("hidden");
                 razorpayFields.addClass("hidden");
 
-                // Show fields based on selected payment method
                 if (paymentMethod === "card") {
                     cardFields.removeClass("hidden");
                 } else if (paymentMethod === "razorpay") {
                     razorpayFields.removeClass("hidden");
                 }
-                // No fields needed for "Cash on Delivery"
             }
 
             paymentMethodSelect.on("change", updatePaymentFields);
             updatePaymentFields(); // Initialize visibility on page load
+            updateTotalPrice(); // Initialize total price on page load
 
             $("#purchase-form").on("submit", function (event) {
                 event.preventDefault(); // Prevent the default form submission
@@ -210,12 +252,13 @@
                     type: "POST",
                     data: formData,
                     headers: {
-                        'X-CSRF-TOKEN': csrfToken // Add CSRF token to the headers
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function (response) {
                         $("#successMessage").html('<p>' + response.message + '</p>');
-                        $("#successModal").modal('show'); // Show success modal
+                        $("#successModal").modal('show');
                         $("#purchase-form")[0].reset(); // Reset the form
+                        updateTotalPrice(); // Reset total price after form reset
                     },
                     error: function (xhr) {
                         const errors = xhr.responseJSON.errors;
@@ -225,7 +268,7 @@
                         });
                         errorMessages += '</ul>';
                         $("#successMessage").html('<p>' + errorMessages + '</p>');
-                        $("#successModal").modal('show'); // Show error modal
+                        $("#successModal").modal('show');
                     }
                 });
             });

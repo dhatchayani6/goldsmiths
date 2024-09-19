@@ -29,56 +29,66 @@ class PurchaseController extends Controller
 
     public function storepurchasedetails(Request $request)
     {
-       // Validate the incoming request
-       $validator = Validator::make($request->all(), [
-        'jewel_id' => 'required|integer',
-        'amount' => 'required|numeric',
-        'customer_name' => 'required|string|max:255',
-        'email' => 'required|email',
-        'mobile_number' => 'required|string|max:15',
-        'zip_code' => 'required|string|max:10',
-        'address' => 'required|string',
-        'payment_method' => 'required|string|in:card,razorpay,cash_on_delivery',
-        'card_name' => 'nullable|string|max:255',
-        'card_number' => 'nullable|string|max:19',
-        'expiry_date' => 'nullable|string|max:7',
-        'cvv' => 'nullable|string|max:4',
-        'razorpay_payment_id' => 'nullable|string|max:255',
-    ]);
+        // Validate the incoming request
+        $validator = Validator::make($request->all(), [
+            'jewel_id' => 'required|integer|exists:jewels,id', // Ensure jewel_id exists
+            'amount' => 'required|', // If you want to keep this, ensure you pass it correctly from the form
+            'customer_name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'mobile_number' => 'required|string|max:15',
+            'zip_code' => 'required|string|max:10',
+            'address' => 'required|string',
+            'payment_method' => 'required|string|in:card,razorpay,cash_on_delivery',
+            'size' => 'required|string|max:255', // Add size validation
+            'quantity' => 'required|integer|min:1', // Add quantity validation
+            'total_price' => 'required|', // Ensure total_price is validated
+            'card_name' => 'nullable|string|max:255',
+            'card_number' => 'nullable|string|max:19',
+            'expiry_date' => 'nullable|string|max:7',
+            'cvv' => 'nullable|string|max:4',
+            'razorpay_payment_id' => 'nullable|string|max:255',
+            'user_id' => 'required|integer|exists:users,id', // Ensure user_id exists
+        ]);
 
-    if ($validator->fails()) {
-        return response()->json(['errors' => $validator->errors()], 422);
-    }
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
-    // Create a new Purchase record
-    $purchase = new Purchase();
-    $purchase->jewel_id = $request->input('jewel_id');
-    $purchase->amount = $request->input('amount');
-    $purchase->customer_name = $request->input('customer_name');
-    $purchase->email = $request->input('email');
-    $purchase->mobile_number = $request->input('mobile_number');
-    $purchase->zip_code = $request->input('zip_code');
-    $purchase->address = $request->input('address');
-    $purchase->payment_method = $request->input('payment_method');
-    
-    // Handle additional fields based on payment method
-    if ($request->input('payment_method') == 'card') {
-        $purchase->card_name = $request->input('card_name');
-        $purchase->card_number = $request->input('card_number');
-        $purchase->expiry_date = $request->input('expiry_date');
-        $purchase->cvv = $request->input('cvv');
-    }
+        // Create a new Purchase record
+        $purchase = new Purchase();
+        $purchase->jewel_id = $request->input('jewel_id');
+        $purchase->amount = $request->input('amount'); // Store the amount
+        $purchase->total_price = $request->input('total_price'); // Store the total price
+        $purchase->customer_name = $request->input('customer_name');
+        
+        // Capture size and quantity
+        $purchase->size = $request->input('size'); // Save size
+        $purchase->quantity = $request->input('quantity'); // Save quantity
+        
+        $purchase->email = $request->input('email');
+        $purchase->mobile_number = $request->input('mobile_number');
+        $purchase->zip_code = $request->input('zip_code');
+        $purchase->address = $request->input('address');
+        $purchase->payment_method = $request->input('payment_method');
+        $purchase->user_id = $request->input('user_id'); // Store user ID
 
-    if ($request->input('payment_method') == 'razorpay') {
-        $purchase->razorpay_payment_id = $request->input('razorpay_payment_id');
-    }
+        // Handle additional fields based on payment method
+        if ($request->input('payment_method') == 'card') {
+            $purchase->card_name = $request->input('card_name');
+            $purchase->card_number = $request->input('card_number');
+            $purchase->expiry_date = $request->input('expiry_date');
+            $purchase->cvv = $request->input('cvv');
+        }
 
-    // Save the Purchase record
-    $purchase->save();
+        if ($request->input('payment_method') == 'razorpay') {
+            $purchase->razorpay_payment_id = $request->input('razorpay_payment_id');
+        }
 
-    // Return a success response
-    return response()->json(['message' => 'Purchase completed successfully!'], 200);
+        // Save the Purchase record
+        $purchase->save();
 
+        // Return a success response
+        return response()->json(['message' => 'Purchase completed successfully!'], 200);
     }
     
     public function fetch_jewel()

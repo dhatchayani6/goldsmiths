@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App;
 use App\Models\JewelQuery;
+use App\Models\UserQueries;
 use Illuminate\Http\Request;
 use App\Models\Jewel;
 use Auth;
@@ -49,6 +50,11 @@ class UserController extends Controller
     
         // Pass the fetched jewel data to the view
         return view('user.status', compact('jewelle'));
+    }
+
+    public function showcustomizationqueries(){
+        $showcustomizationqueries=UserQueries::all();
+        return view('user.myqueries',compact('showcustomizationqueries'));
     }
 }
 

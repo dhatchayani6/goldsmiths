@@ -28,7 +28,12 @@
                         <h1 class="jewel-name">{{ $jewel->name }}</h1>
                         <p class="jewel-description">{{ $jewel->description }}</p>
                         <p class="jewel-price">Price: ${{ $jewel->price }}</p>
-                        <a href="{{ url('purchasepageshow', parameters: ['id' => $jewel->id]) }}" class="btn btn-success btn-purchase">Purchase</a>
+                        <a href="{{ url('purchasepageshow', parameters: ['id' => $jewel->id]) }}"
+                            class="btn btn-success btn-purchase">Purchase</a>
+                        <button class="btn btn-primary">
+                            <a href="{{ route('customize.jewel', ['id' => $jewel]) }}"
+                                style="color: white; text-decoration: none;">Customize</a>
+                        </button>
                     </div>
                 </div>
             </div>

@@ -65,5 +65,31 @@ class UserQueriesController extends Controller
     
         return view('smith.query-customization', compact('userQueries')); // Pass data to the view
     }
+
+    public function accept($id)
+    {
+        $query = UserQueries::find($id);
+        if ($query) {
+            $query->status = 'accepted';
+            $query->save();
+
+            return response()->json(['message' => 'Query accepted successfully.']);
+        }
+
+        return response()->json(['message' => 'Query not found.'], 404);
+    }
+
+    public function reject($id)
+    {
+        $query = UserQueries::find($id);
+        if ($query) {
+            $query->status = 'rejected';
+            $query->save();
+
+            return response()->json(['message' => 'Query rejected successfully.']);
+        }
+
+        return response()->json(['message' => 'Query not found.'], 404);
+    }
     
 }
