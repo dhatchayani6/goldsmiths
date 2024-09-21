@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\JewelQueryController;
 use App\Http\Controllers\UserQueriesController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\CustomqueriesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,9 +44,12 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 
 // admin part
-Route::get('/jewellery_page',[JewelController::class,'showjewel_page'])->name('jewellery_page');
+Route::get('/jewellery_page',[JewelController::class,'showjewel_page'])->name('jewellerypage');
+Route::get('show_jewel_store',[JewelController::class,'show_store_jewellery'])->name('showstorejewellery');
 Route::post( '/jewel_store', action: [JewelController::class, 'store_jewel'])->name('jewel.store');
 Route::get('/jewel/queries', [JewelController::class, 'showQueries'])->name('jewel.queries');
+Route::post('/query/customize-payment', [JewelController::class, 'customizePayment'])->name('query.customizePayment');
+
 Route::post('/queries/{id}/accept', [JewelController::class, 'accept'])->name('queries.accept');
 Route::post('/queries/{id}/reject', [JewelController::class, 'reject'])->name('queries.reject');
 Route::post('/jewel/{id}/query', [JewelQueryController::class, 'submitQuery'])->name('jewel.query');
@@ -76,4 +80,7 @@ Route::get('/custom-queries', [UserQueriesController::class, 'getCustomQueries']
 
 Route::post('/query/accept/{id}', [UserQueriesController::class, 'accept']);
 Route::post('/query/reject/{id}', [UserQueriesController::class, 'reject']);
+
+Route::post('/query/customize-payment', [CustomqueriesController::class, 'store_customqueries'])->name('query.customizePayment');
+
 

@@ -1,13 +1,84 @@
-@include('smith.smithhome')
+<!DOCTYPE html>
+<html lang="en">
 
-<div id="content-wrapper">
-    <div class="container mt-4">
-        <h1 class="mb-4">Add New Jewelry</h1>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goldsmith Admin Dashboard - Add New Jewelry</title>
 
-        <!-- Jewelry Form -->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card shadow-sm">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            background-color: #f7f7f7;
+        }
+
+        .navbar {
+            background: #ffcc00; /* Gold color */
+        }
+
+        #content-wrapper {
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            flex: 1;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 10px;
+            color: #666;
+        }
+    </style> 
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">Goldsmith Admin Panel</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                @if (Auth::check())
+                    <li>
+                        <form method="post" action="{{ route('logout') }}">
+                            @csrf
+                            <button class="btn btn-primary">LOGOUT ({{ Auth::user()->name }})</button>
+                        </form>
+                    </li>
+                @endif
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div id="content-wrapper">
+        <div class="container mt-4">
+            <h1 class="mb-4">Add New Jewelry</h1>
+
+            <!-- Jewelry Form -->
+            <div class="row">
+                <div class="col-md-12">
                     <div class="card-body">
                         <form method="POST" action="{{ route('jewel.store') }}" enctype="multipart/form-data">
                             @csrf
@@ -71,39 +142,19 @@
             </div>
         </div>
     </div>
-</div>
 
-<!-- Add jQuery and AJAX script here or in a separate JS file -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('form').on('submit', function (e) {
-            e.preventDefault(); // Prevent default form submission
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; 2024 Goldsmith Admin Panel. All Rights Reserved.</p>
+    </div>
 
-            var formData = new FormData(this);
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
 
-            $.ajax({
-                url: $(this).attr('action'),
-                type: 'POST',
-                data: formData,
-                contentType: false, // Important
-                processData: false, // Important
-                success: function (response) {
-                    alert('Jewelry added successfully!');
-                    $('form')[0].reset();
-                },
-                error: function (xhr) {
-                    var errors = xhr.responseJSON.errors;
-                    var errorHtml = '<ul>';
-                    $.each(errors, function (key, value) {
-                        errorHtml += '<li>' + value[0] + '</li>';
-                    });
-                    errorHtml += '</ul>';
-
-                    $('.alert').remove();
-                    $('<div class="alert alert-danger">' + errorHtml + '</div>').insertBefore('form');
-                }
-            });
-        });
-    });
-</script>
+</html>

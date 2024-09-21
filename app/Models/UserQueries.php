@@ -16,4 +16,8 @@ class UserQueries extends Model
         'query',
         'jewel_image',
     ];
+
+    public function jewel() {
+        return $this->belongsTo(Jewel::class, 'jewel_id'); // Adjust the foreign key as needed
+    }
 }

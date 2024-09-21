@@ -9,6 +9,7 @@ use App\Models\Jewel;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Validator;
+use App\Models\Customqueries;
 
 
 class PurchaseController extends Controller
@@ -32,15 +33,15 @@ class PurchaseController extends Controller
         // Validate the incoming request
         $validator = Validator::make($request->all(), [
             'jewel_id' => 'required|integer|exists:jewels,id', // Ensure jewel_id exists
-            'amount' => 'required|', // If you want to keep this, ensure you pass it correctly from the form
+            'amount' => 'nullable|integer|exists:jewels,price', // If you want to keep this, ensure you pass it correctly from the form
             'customer_name' => 'required|string|max:255',
             'email' => 'required|email',
             'mobile_number' => 'required|string|max:15',
             'zip_code' => 'required|string|max:10',
             'address' => 'required|string',
             'payment_method' => 'required|string|in:card,razorpay,cash_on_delivery',
-            'size' => 'required|string|max:255', // Add size validation
-            'quantity' => 'required|integer|min:1', // Add quantity validation
+            'size' => 'nullable|string|max:255', // Add size validation
+            'quantity' => 'nullable|integer|min:1', // Add quantity validation
             'total_price' => 'required|', // Ensure total_price is validated
             'card_name' => 'nullable|string|max:255',
             'card_number' => 'nullable|string|max:19',
@@ -102,26 +103,31 @@ class PurchaseController extends Controller
         return view('smith.payment-status',compact('fetchpurchase')); 
     }
     public function updateStatus(Request $request)
-    {
-        // Validate the incoming request
-        $request->validate([
-            'status' => 'required|in:pending,complete,failed',
-            'id' => 'required|integer|exists:purchases,id'
-        ]);
+{
+    // Validate the incoming request
+    $request->validate([
+        'status' => 'required|in:pending,complete,failed',
+        'id' => 'required|integer|exists:purchases,id'
+    ]);
 
-        // Find the purchase by ID
-        $purchase = Purchase::find($request->input('id'));
+    // Find the purchase by ID
+    $purchase = Purchase::find($request->input('id'));
 
-        if ($purchase) {
-            // Update the status
-            $purchase->status = $request->input('status');
-            $purchase->save();
-            
-            return response()->json(['message' => 'Status updated successfully!']);
-        }
+    if ($purchase) {
+        // Update the status in the purchases table
+        $purchase->status = $request->input('status');
+        $purchase->save();
 
-        return response()->json(['message' => 'Purchase not found.'], 404);
+        // Update the status in the custom queries table based on jewel_id and user_id
+        Customqueries::where('jewel_id', $purchase->jewel_id)
+            ->where('user_id', $purchase->user_id)
+            ->update(['status' => $purchase->status]);
+
+        return response()->json(['message' => 'Status updated successfully!']);
     }
+
+    return response()->json(['message' => 'Purchase not found.'], 404);
+}
 
 
     public function getcustomize(){

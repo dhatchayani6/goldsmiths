@@ -35,7 +35,7 @@ return new class extends Migration
             $table->string('razorpay_payment_id')->nullable(); 
         
             // Amount
-            $table->decimal('amount');// Total purchase amount
+            $table->integer('amount');// Total purchase amount
         
             $table->timestamps();
         });

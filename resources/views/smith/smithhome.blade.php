@@ -70,7 +70,7 @@
             padding: 10px;
             color: #666;
         }
-    </style> ippo theriyutha
+    </style> 
 </head>
 
 <body>
@@ -106,7 +106,7 @@
 
             <div class="row mt-4">
                 <div class="col-md-3">
-                    <div class="card text-center" onclick="window.location='{{ route('jewellery_page') }}'">
+                    <div class="card text-center" onclick="window.location='{{ route('showstorejewellery') }}'">
                         <img src="images/addjewley.jpg" class="card-img-top" alt="Add Jewelry">
                         <div class="card-body">
                             <h5 class="card-title">Add Jewelry</h5>
@@ -137,6 +137,15 @@
                         <img src="images/addjewley.jpg" class="card-img-top" alt="Custom Jewelry Query">
                         <div class="card-body">
                             <h5 class="card-title">Custom Jewelry Query</h5>
+                            <p class="card-text">Handle queries for custom jewelry requests.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center" onclick="window.location='{{ route('get_purchases') }}'">
+                        <img src="images/addjewley.jpg" class="card-img-top" alt="Custom Jewelry Query">
+                        <div class="card-body">
+                            <h5 class="card-title">Payemt Status</h5>
                             <p class="card-text">Handle queries for custom jewelry requests.</p>
                         </div>
                     </div>

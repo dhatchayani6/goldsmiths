@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->decimal('total_price', 10, 2); // Total price field with precision
             $table->string('customer_name'); // Customer name
-            $table->integer('mobile_number');
+            $table->string('mobile_number');
             $table->timestamps();
         });
     }

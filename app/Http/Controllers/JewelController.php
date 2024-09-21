@@ -13,6 +13,11 @@ class JewelController extends Controller
         return view('smith.add_jewelery');
     }
 
+
+public function show_store_jewellery(){
+return view('smith.add_jewelery');
+}
+
     public function store_jewel(Request $request)
     {
         $request->validate([
@@ -96,4 +101,5 @@ class JewelController extends Controller
 
         return response()->json(['success' => true]);
     }
+    
 }

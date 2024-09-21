@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Smith User Queries</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -37,8 +37,7 @@
             margin-top: 20px;
         }
 
-        th,
-        td {
+        th, td {
             padding: 15px;
             border: 1px solid #ddd;
             text-align: left;
@@ -92,8 +91,7 @@
                 font-size: 24px;
             }
 
-            th,
-            td {
+            th, td {
                 padding: 10px;
                 font-size: 14px;
             }
@@ -128,8 +126,7 @@
                         </td>
                         <td>
                             @if($query->jewel && $query->jewel->image_url)
-                                <img src="{{ asset('storage/' . $query->jewel->image_url) }}" alt="{{ $query->jewel->name }}"
-                                     class="jewel-image img-thumbnail">
+                                <img src="{{ asset('storage/' . $query->jewel->image_url) }}" alt="{{ $query->jewel->name }}" class="jewel-image img-thumbnail">
                             @else
                                 <p>No Jewel Image</p>
                             @endif
@@ -144,7 +141,10 @@
                                 <button class="btn btn-primary customize-btn" 
                                         data-query-id="{{ $query->id }}" 
                                         data-product-id="{{ $query->jewel_id }}" 
-                                        data-product-image="{{$query->image_url}}"
+                                        data-product-image="{{ $query->image_url }}"
+                                        data-jewel-id="{{ $query->jewel_id }}" 
+                                        data-user-id="{{ $query->user_id }}" 
+                                        data-customer-name="{{ $query->customer_name }}" 
                                         data-bs-toggle="modal" 
                                         data-bs-target="#customizePaymentModal">Customize Payment</button>
                             @endif
@@ -165,7 +165,10 @@
                 </div>
                 <div class="modal-body">
                     <form id="customizePaymentForm">
-                        <input type="hidden" name="query_id" id="query_id" value="">
+                        @csrf 
+                        <input type="hidden" name="jewel_id" id="jewel_id" value="">
+                        <input type="hidden" name="user_id" id="user_id" value="">
+
                         <div class="mb-3">
                             <label for="product_id" class="form-label">Product ID</label>
                             <input type="text" class="form-control" id="product_id" name="product_id" readonly>
@@ -178,9 +181,28 @@
                             <label for="product_image" class="form-label">Product Image</label>
                             <img id="product_image" class="img-thumbnail" style="width: 100%; height: auto;">
                         </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="size">Size</label>
+                                <input type="text" class="form-control" id="size" name="size" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="quantity">Quantity</label>
+                                <input type="number" class="form-control" id="quantity" name="quantity" min="1" required>
+                            </div>
+                        </div>
+
                         <div class="mb-3">
                             <label for="amount" class="form-label">Amount</label>
-                            <input type="number" class="form-control" id="amount" name="amount" required>
+                            <input type="text" class="form-control" id="amount" name="total_price" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="mobile_number" class="form-label">Mobile Number</label>
+                            <input type="text" class="form-control" id="mobile_number" name="mobile_number" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="customer_name" class="form-label">Customer Name</label>
+                            <input type="text" class="form-control" id="customer_name" name="customer_name" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
@@ -192,76 +214,56 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        $(document).ready(function () {
-            // Show modal with query ID and product details
-            $('.customize-btn').click(function () {
-                var queryId = $(this).data('query-id');
-                var productName = $(this).data('product-name');
-                var productId = $(this).data('product-id');
-                var productImage = $(this).data('product-image');
+    $(document).ready(function () {
+        // Set up AJAX with CSRF token
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
 
-                $('#query_id').val(queryId);
-                $('#product_name').val(productName);
-                $('#product_id').val(productId);
-                $('#product_image').attr('src', productImage);
-            });
+        // Show modal with query ID and product details
+        $('.customize-btn').click(function () {
+            var queryId = $(this).data('query-id');
+            var productName = $(this).data('customer-name'); // Adjusted this line
+            var productId = $(this).data('product-id');
+            var productImage = $(this).data('product-image');
+            var jewelId = $(this).data('jewel-id');
+            var userId = $(this).data('user-id');
+            var customerName = $(this).data('customer-name');
 
-            // Submit customize payment form
-            $('#customizePaymentForm').submit(function (e) {
-                e.preventDefault();
-                var formData = $(this).serialize();
-                $.ajax({
-                    url: '/query/customize-payment', // Update with the correct route
-                    type: 'POST',
-                    data: formData,
-                    success: function (response) {
-                        alert(response.message);
-                        location.reload();
-                    },
-                    error: function (xhr) {
-                        alert('Error: ' + xhr.responseText);
+            // Populate the form fields in the modal
+            $('#product_id').val(productId);
+            $('#product_name').val(productName);
+            $('#product_image').attr('src', productImage);
+            $('#jewel_id').val(jewelId);
+            $('#user_id').val(userId);
+            $('#customer_name').val(customerName);
+        });
+
+        // Submit customize payment form
+        $('#customizePaymentForm').submit(function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                url: '/query/customize-payment', // Update with the correct route
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    alert('Payment customized successfully!');
+                    $('#customizePaymentModal').modal('hide');
+                    // Optionally, reload the table or update the UI
+                },
+                error: function (error) {
+                    if (error.responseJSON && error.responseJSON.message) {
+                        alert('Error: ' + error.responseJSON.message);
+                    } else {
+                        alert('An unexpected error occurred. Please try again.');
                     }
-                });
-            });
-
-            // Accept button click event
-            $('.btn-success').click(function () {
-                var queryId = $(this).closest('tr').find('td:first').text();
-                $.ajax({
-                    url: '/query/accept/' + queryId,
-                    type: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function (response) {
-                        alert(response.message);
-                        location.reload();
-                    },
-                    error: function (xhr) {
-                        alert('Error: ' + xhr.responseText);
-                    }
-                });
-            });
-
-            // Reject button click event
-            $('.btn-danger').click(function () {
-                var queryId = $(this).closest('tr').find('td:first').text();
-                $.ajax({
-                    url: '/query/reject/' + queryId,
-                    type: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function (response) {
-                        alert(response.message);
-                        location.reload();
-                    },
-                    error: function (xhr) {
-                        alert('Error: ' + xhr.responseText);
-                    }
-                });
+                }
             });
         });
+    });
     </script>
 </body>
 
