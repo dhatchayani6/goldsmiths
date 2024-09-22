@@ -8,17 +8,43 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
+        body {
+            background-color: #f4f4f4;
+        }
+
         .navbar {
-            background: #eeeeee;
+            background: #ffcc00; /* Darker navbar color */
         }
 
         .navbar-brand {
             font-size: 1.5rem;
+            color: #ffffff;
+        }
+
+        .navbar-nav .nav-link {
+            color: #ffffff;
+            font-size: 1.1rem;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #ffc107; /* Gold color on hover */
+            cursor: pointer;
+        }
+
+        .card {
+            transition: transform 0.2s;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
         }
 
         .card-img-top {
-            width: 100%;
-            height: auto;
+            height: 210px;
             object-fit: cover;
         }
 
@@ -28,42 +54,60 @@
 
         .card-title {
             font-size: 1.5rem;
+            color: #333;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 15px;
+            background: #343a40;
+            color: #ffffff;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        #notification-icon {
+            position: relative;
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+        }
+
+        h1, h2 {
+            color: #343a40;
         }
     </style>
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="#">User Dashboard</a>
+        <a class="navbar-brand" href="#">Gold Smith</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto">
+            <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
                     <a class="nav-link" href="#">Dashboard <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Profile</a>
+                    <a class="nav-link" href="{{route('profile.show')}}">Profile</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{route('show_customization_queries')}}">Customization Status</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Messages</a>
+                    <a class="nav-link" href="{{route('chat')}}">Messages</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Settings</a>
-                </li>
+                
                 <li class="nav-item">
                     <a class="nav-link" href="#">Status</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" id="notification-icon"> <!-- Link to the status page -->
-                        <i class="fas fa-bell"></i>
-                        <span class="badge badge-danger" style="position: absolute; top: 0; right: 0;">3</span> <!-- Example badge -->
-                    </a>
-                </li>
+               
                 @if (Auth::check())
                 <form class="form-inline" method="post" action="{{ route('logout') }}">
                     @csrf
@@ -71,17 +115,19 @@
                 </form>
                 @endif
             </ul>
-        
         </div>
     </nav>
 
     <div class="container mt-4">
-        <h1>Welcome to Your Dashboard</h1>
-        <p>Here you can manage your profile, view your orders, and access various settings.</p>
-        <h2>Available Jewels</h2>
+        <h1>Welcome to User Dashboard</h1>
+        <h2 class="mt-4">Available Jewels</h2>
         <div class="row" id="jewel-container">
             <!-- Jewels will be dynamically inserted here -->
         </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2024  All Rights Reserved.</p>
     </div>
 
     <!-- jQuery -->
@@ -93,7 +139,7 @@
         $(document).ready(function () {
             // Automatically load jewels when the page is ready
             $.ajax({
-                url: '{{ route('fetchjewel') }}',  // Replace with your actual API endpoint
+                url: '{{ route('fetchjewel') }}',
                 type: 'GET',
                 success: function (response) {
                     $('#jewel-container').empty(); // Clear previous content
@@ -102,7 +148,7 @@
                             $('#jewel-container').append(`
                                 <div class="col-md-4">
                                     <div class="card mb-4">
-                                        <img src="${jewel.jewel_image}" class="card-img-top" alt="${jewel.name}" style="height: 210px; object-fit: fill;">
+                                        <img src="${jewel.jewel_image}" class="card-img-top" alt="${jewel.name}">
                                         <div class="card-body">
                                             <h5 class="card-title">${jewel.name}</h5>
                                             <p class="card-text">${jewel.description}</p>

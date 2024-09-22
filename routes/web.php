@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\JewelController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -84,3 +85,9 @@ Route::post('/query/reject/{id}', [UserQueriesController::class, 'reject']);
 Route::post('/query/customize-payment', [CustomqueriesController::class, 'store_customqueries'])->name('query.customizePayment');
 
 
+// profile part
+Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show'); // Display the profile
+Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update'); // Update profile info
+
+//chat part
+Route::get('/chat', [ChatController::class, 'chat'])->name('chat');

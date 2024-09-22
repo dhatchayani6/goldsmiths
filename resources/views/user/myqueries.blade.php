@@ -9,18 +9,92 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <style>
-        /* Your existing styles here */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+        }
+        nav {
+            background-color: #ffcc00;
+            ; /* Header background color */
+        }
+        nav .navbar-brand, nav .nav-link {
+            color: #fff !important; /* Header text color */
+        }
+        nav .nav-link:hover {
+            color: #ffeb3b !important; /* Hover color */
+        }
         .jewel-image {
             width: 100px;
             height: 100px;
+            object-fit: cover; /* Ensure images are nicely contained */
+        }
+        .footer {
+            background-color: rgba(0, 0, 0, 0.05);
+            padding: 20px 0;
+            text-align: center;
+            color: #fff; /* Footer text color */
+        }
+        .content {
+            flex: 1;
+            padding: 20px; /* Added padding for the content area */
+        }
+        h1 {
+            color: #333; /* Title color */
+            margin-bottom: 20px; /* Space below the title */
+        }
+        table {
+            background-color: #fff; /* Table background */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow effect */
+        }
+        th {
+            background-color: #6f42c1; /* Table header color */
+            color: black; /* Table header text color */
+        }
+        td {
+            color: #333; /* Table cell text color */
+        }
+        tr:hover {
+            background-color: #f1f1f1; /* Highlight row on hover */
+        }
+        .btn-success {
+            background-color: #28a745; /* Button color */
+            border-color: #28a745; /* Button border color */
+        }
+        .btn-success:hover {
+            background-color: #218838; /* Darker button color on hover */
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">My Jewelry Site</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-4 content">
         <h1>User Queries</h1>
-        <table class="table">
+        <table class="table table-striped table-bordered">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -36,13 +110,13 @@
                 @foreach($showcustomizationqueries as $customizequeries)
                     <tr>
                         <td>{{ $customizequeries->id }}</td>
-                        <td>{{ $customizequeries->query }}</td>
+                        <td>{{ $customizequeries->jewel_id }}</td>
                         <td>{{ $customizequeries->user_id }}</td>
                         <td>
-                            <img src="{{ $customizequeries->image_url }}" alt="Image" class="jewel-image">
+                            {{$customizequeries->jewel_image}}
                         </td>
                         <td>{{ $customizequeries->status }}</td>
-                        <td>{{ $customizequeries->total_price }}</td>
+                        <td>${{ number_format($customizequeries->total_price, 2) }}</td> <!-- Proper currency formatting -->
                         <td>
                             <button class="btn btn-success purchase-btn" data-id="{{ $customizequeries->id }}"
                                 data-jewel-id="{{ $customizequeries->jewel->id }}"
@@ -165,6 +239,13 @@
             </div>
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="text-muted">&copy; 2024 My Jewelry Site. All rights reserved.</p>
+        </div>
+    </footer>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>

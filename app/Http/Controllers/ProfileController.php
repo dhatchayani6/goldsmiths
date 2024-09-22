@@ -24,18 +24,18 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
+    // public function update(ProfileUpdateRequest $request): RedirectResponse
+    // {
+    //     $request->user()->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+    //     if ($request->user()->isDirty('email')) {
+    //         $request->user()->email_verified_at = null;
+    //     }
 
-        $request->user()->save();
+    //     $request->user()->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
-    }
+    //     return Redirect::route('profile.edit')->with('status', 'profile-updated');
+    // }
 
     /**
      * Delete the user's account.
@@ -57,4 +57,36 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    public function show()
+    {
+        return view('home.profile', ['user' => Auth::user()]);
+    }
+
+    public function update(Request $request)
+{
+    // Validate the request for the image
+    $request->validate([
+        'profile_picture' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048', // Allow certain image types
+    ]);
+
+    $user = Auth::user();
+
+    // Handle profile picture upload
+    if ($request->hasFile('profile_picture')) {
+        // Generate a unique file name
+        $filename = time() . '_' . $request->file('profile_picture')->getClientOriginalName();
+        
+        // Store the uploaded image in the public/images directory
+        $request->file('profile_picture')->move(public_path('images'), $filename);
+        
+        // Update the user's profile picture path
+        $user->profile_picture = 'images/' . $filename; // Store the relative path
+    }
+
+    $user->save();
+
+    return response()->json(['success' => true]);
+}
+
 }

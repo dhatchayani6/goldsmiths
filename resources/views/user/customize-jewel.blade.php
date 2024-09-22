@@ -14,7 +14,6 @@
         .alert {
             margin-top: 20px;
         }
-        /* Keyframe animations for form fields */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -22,7 +21,6 @@
         .fade-in {
             animation: fadeIn 1s ease-in;
         }
-        /* Keyframe animation for modal */
         @keyframes slideUp {
             from { transform: translateY(100%); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
@@ -30,33 +28,57 @@
         .slide-up {
             animation: slideUp 0.5s ease-out;
         }
+        footer {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+            text-align: center;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">My Jewelry Site</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
     <div class="container mt-5">
         <h2>User Query Form</h2>
         <form id="query-form" class="fade-in" method="POST" enctype="multipart/form-data">
-            <!-- Hidden input to store the jewel ID and user ID -->
             <input type="hidden" name="jewel_id" value="{{ $jewelId }}">
             <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
 
-            <!-- Image File Input -->
             <div class="form-group">
                 <label for="image_file">Upload Image</label>
                 <input type="file" class="form-control-file" id="image_file" name="image_url" required>
             </div>
 
-            <!-- Query Input -->
             <div class="form-group">
                 <label for="query">Query</label>
                 <textarea class="form-control" id="query" name="query" rows="4" required></textarea>
             </div>
 
-            <!-- Submit Button -->
             <button type="submit" class="btn btn-primary">Submit Query</button>
         </form>
 
-        <!-- Modal for Success Message -->
         <div class="modal fade slide-up" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -77,7 +99,13 @@
         </div>
     </div>
 
-    <!-- JavaScript Section -->
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p class="text-muted">&copy; 2024 My Jewelry Site. All rights reserved.</p>
+        </div>
+    </footer>
+
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
@@ -85,23 +113,23 @@
         const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
         $("#query-form").on("submit", function (event) {
-            event.preventDefault(); // Prevent the default form submission
+            event.preventDefault();
 
-            const formData = new FormData(this); // Use FormData to handle file uploads
+            const formData = new FormData(this);
 
             $.ajax({
-                url: "{{ route('store.customizedesign') }}", // Replace with your route name
+                url: "{{ route('store.customizedesign') }}",
                 type: "POST",
                 data: formData,
-                processData: false, // Do not process the data
-                contentType: false, // Do not set content type
+                processData: false,
+                contentType: false,
                 headers: {
-                    'X-CSRF-TOKEN': csrfToken // Add CSRF token to the headers
+                    'X-CSRF-TOKEN': csrfToken
                 },
                 success: function (response) {
                     $("#successMessage").html('<p>' + response.message + '</p>');
-                    $("#successModal").modal('show'); // Show success modal
-                    $("#query-form")[0].reset(); // Reset the form
+                    $("#successModal").modal('show');
+                    $("#query-form")[0].reset();
                 },
                 error: function (xhr) {
                     const errors = xhr.responseJSON.errors;
@@ -111,7 +139,7 @@
                     });
                     errorMessages += '</ul>';
                     $("#successMessage").html('<p>' + errorMessages + '</p>');
-                    $("#successModal").modal('show'); // Show error modal
+                    $("#successModal").modal('show');
                 }
             });
         });

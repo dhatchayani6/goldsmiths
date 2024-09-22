@@ -13,7 +13,7 @@
             font-family: 'Arial', sans-serif;
             background-color: #f4f4f4;
             margin: 0;
-            padding: 20px;
+            /* padding: 20px; */
         }
 
         .container {
@@ -100,6 +100,8 @@
 </head>
 
 <body>
+    @include('smith.navabr')
+
     <div class="container mt-5">
         <h1>User Queries</h1>
         <table>
@@ -253,6 +255,7 @@
                     alert('Payment customized successfully!');
                     $('#customizePaymentModal').modal('hide');
                     // Optionally, reload the table or update the UI
+                    location.reload(); // Reload the page or update the table as needed
                 },
                 error: function (error) {
                     if (error.responseJSON && error.responseJSON.message) {

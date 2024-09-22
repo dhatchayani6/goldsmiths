@@ -9,7 +9,7 @@ class UserQueries extends Model
 {
     use HasFactory;
 
-    protected $fillable=[
+    protected $fillable = [
         'jewel_id',
         'user_id',
         'image_url',
@@ -17,7 +17,14 @@ class UserQueries extends Model
         'jewel_image',
     ];
 
-    public function jewel() {
+    public function jewel()
+    {
         return $this->belongsTo(Jewel::class, 'jewel_id'); // Adjust the foreign key as needed
     }
+
+    public function customQuery()
+    {
+        return $this->hasOne(CustomQueries::class, 'user_id'); // Adjust the foreign key as necessary
+    }
+
 }
