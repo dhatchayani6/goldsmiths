@@ -1,10 +1,10 @@
 <!-- Footer -->
-<footer class="text-center text-lg-start bg-light text-muted" style="background-color: #f0f0f0;">
+<footer class="footer text-center text-lg-start bg-light text-muted" style="background-color: #f0f0f0;">
   
 
   <!-- Copyright -->
   <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
-    © 2024 Copyright
+    © 2024 Copyright.All Rights Reserved
   </div>
 </footer>
 
@@ -17,3 +17,10 @@
 <!-- Optional: Add Bootstrap JS for full functionality -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+<style>
+  .footer{
+   
+    width: 100%;
+
+  }
+</style>

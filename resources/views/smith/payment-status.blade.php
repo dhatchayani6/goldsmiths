@@ -108,10 +108,9 @@
                         <div class="status-card">
                             <h2>Transaction Details</h2>
                             <div class="transaction-info">
-                                <p><strong>Transaction ID:</strong> {{ $purchase->jewel_id }}</p>
-                                <p><strong>Amount:</strong> ${{ number_format($purchase->amount, 2) }}</p>
-                                <p><strong>Date:</strong> {{ $purchase->created_at->format('Y-m-d') }}</p>
-                            </div>
+                                <p><strong>User ID:</strong> {{ $purchase->user_id }}</p>
+                                <p><strong>Amount:</strong> ${{$purchase->total_price}}</p>
+                                </div>
                             <div class="status-info">
                                 <h3>Status: <span class="status-text {{ strtolower($purchase->status) }}">{{ ucfirst($purchase->status) }}</span></h3>
                             </div>

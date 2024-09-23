@@ -14,6 +14,8 @@
 </head>
 
 <body>
+@include('user.navbar')
+
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8 jewel-status-container">
@@ -33,6 +35,9 @@
             </div>
         </div>
     </div>
+
+    <!-- footer -->
+    @include('home.footer')
 
     <!-- Bootstrap JS (Optional) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

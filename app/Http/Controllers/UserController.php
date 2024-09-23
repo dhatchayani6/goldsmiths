@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App;
 use App\Models\Customqueries;
 use App\Models\JewelQuery;
-use App\Models\UserQueries;
+use App\Models\Purchase;
 use Illuminate\Http\Request;
 use App\Models\Jewel;
 use Auth;
+
+
 
 class UserController extends Controller
 {
@@ -56,7 +58,7 @@ class UserController extends Controller
     // public function showcustomizationqueries() {
     //     $userId = Auth::id();
     //     $showcustomizationqueries = UserQueries::with('id') // Assuming 'jewel' is a defined relationship
-    //         ->where('id', $userId);    
+    //         ->where('id',w $userId);    
     //     return view('user.myqueries', compact('showcustomizationqueries'));
     // }
     public function showcustomizationqueries() {

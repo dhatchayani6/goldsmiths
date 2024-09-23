@@ -5,13 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Details</title>
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
-    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
             background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensures the footer stays at the bottom */
         }
         .jewel-container {
             background: #fff;
@@ -49,11 +50,14 @@
             font-weight: bold;
             color: #007bff;
         }
+        
     </style>
 </head>
 
 <body>
-    <div class="container">
+@include('user.navbar')
+
+    <div class="container flex-grow-1 mt-5">
         <div class="row justify-content-center">
             <div class="col-lg-8 jewel-container">
                 <div class="row">
@@ -64,7 +68,7 @@
                         <h1 class="jewel-name">{{ $jewel->name }}</h1>
                         <p class="jewel-description">{{ $jewel->description }}</p>
                         <p class="jewel-price">Price: ${{ $jewel->price }}</p>
-                        <a href="{{ url('purchasepageshow', parameters: ['id' => $jewel->id]) }}" class="btn btn-success btn-purchase">Purchase</a>
+                        <a href="{{ url('purchasepageshow', ['id' => $jewel->id]) }}" class="btn btn-success">Purchase</a>
                         <button class="btn btn-primary">
                             <a href="{{ route('customize.jewel', ['id' => $jewel]) }}" style="color: white; text-decoration: none;">Customize</a>
                         </button>
@@ -95,38 +99,41 @@
                 </div>
             </div>
 
-            
+            <!-- Queries List -->
+            <div id="queriesList" class="col-lg-8"></div>
+
         </div>
     </div>
+    
+    <!-- Footer -->
+    <!-- <div class="footer">
+        <p>© 2024 Gold Smith. All Rights Reserved.</p>
+    </div> -->
+    @include('home.footer')
 
-    <!-- Bootstrap JS (Optional) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- jQuery for AJAX -->
     <script>
         $(document).ready(function () {
-            // Handle form submission via AJAX
             $('#queryForm').on('submit', function (event) {
-                event.preventDefault(); // Prevent the default form submission
+                event.preventDefault();
 
                 $.ajax({
-                    url: $(this).attr('action'), // Form action URL
-                    type: 'POST', // Form method
-                    data: $(this).serialize(), // Form data
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: $(this).serialize(),
                     success: function (response) {
-                        // Handle success response
                         alert('Your query has been submitted successfully!');
-                        $('#queryForm')[0].reset(); // Reset the form fields
+                        $('#queryForm')[0].reset();
                     },
                     error: function (xhr) {
-                        // Handle error response
+                        console.error(xhr.responseText);
                         alert('An error occurred. Please try again.');
                     }
                 });
             });
 
-            // Fetch and display queries
             $.ajax({
-                url: '{{ route('jewel.show', $jewel->id) }}', // URL to fetch queries
+                url: '{{ route('jewel.show', $jewel->id) }}',
                 type: 'GET',
                 success: function (response) {
                     let queriesHtml = '';

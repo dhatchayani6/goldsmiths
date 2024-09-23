@@ -12,29 +12,12 @@
             background-color: #f4f4f4;
         }
 
-        .navbar {
-            background: #ffcc00; /* Darker navbar color */
-        }
-
-        .navbar-brand {
-            font-size: 1.5rem;
-            color: #ffffff;
-        }
-
-        .navbar-nav .nav-link {
-            color: #ffffff;
-            font-size: 1.1rem;
-        }
-
-        .navbar-nav .nav-link:hover {
-            color: #ffc107; /* Gold color on hover */
-            cursor: pointer;
-        }
-
         .card {
             transition: transform 0.2s;
             border-radius: 12px;
             overflow: hidden;
+            display: flex;
+            flex-direction: column; /* Ensure contents are stacked */
         }
 
         .card:hover {
@@ -50,6 +33,7 @@
 
         .card-body {
             text-align: center;
+            flex-grow: 1; /* Allow card body to grow */
         }
 
         .card-title {
@@ -57,15 +41,7 @@
             color: #333;
         }
 
-        .footer {
-            text-align: center;
-            padding: 15px;
-            background: #343a40;
-            color: #ffffff;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
+            
 
         #notification-icon {
             position: relative;
@@ -84,35 +60,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="#">Gold Smith</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Dashboard <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{route('profile.show')}}">Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{route('show_customization_queries')}}">Customization Status</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{route('chat')}}">Messages</a>
-                </li>
-               
-                @if (Auth::check())
-                <form class="form-inline" method="post" action="{{ route('logout') }}">
-                    @csrf
-                    <button class="btn btn-outline-danger my-2 my-sm-0">LOGOUT ({{ Auth::user()->name }})</button>
-                </form>
-                @endif
-            </ul>
-        </div>
-    </nav>
+    @include('user.navbar')
 
     <div class="container mt-4">
         <h1>Welcome to User Dashboard</h1>
@@ -122,9 +70,7 @@
         </div>
     </div>
 
-    <div class="footer">
-        <p>&copy; 2024  All Rights Reserved.</p>
-    </div>
+    @include('home.footer')
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -4,238 +4,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Purchase Form</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Purchase Jewel</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f8f9fa;
+            background-color: #f1f3f5;
+            font-family: 'Montserrat', sans-serif;
         }
 
-        .container {
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        .jewel-container {
+            background: #fff;
+            border-radius: 12px;
             padding: 30px;
-            margin-top: 50px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            margin: 30px auto;
+            max-width: 600px;
         }
 
-        h2 {
-            margin-bottom: 30px;
-            color: #343a40;
+        .section-title {
+            margin-top: 30px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #5a5a5a;
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #dee2e6;
         }
 
-        .hidden {
-            display: none;
+        .jewel-details {
+            background-color: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .jewel-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .jewel-price {
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #28a745, #1e7e34);
+            border: none;
+            transition: background 0.3s;
+        }
+
+        .modal-header {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #28a745;
+        }
+
+        #response-message {
+            margin-top: 20px;
+            font-weight: bold;
+            border-radius: 0.5rem;
+        }
+        .footer{
+            position: fixed;
+            bottom: 0 !important;
         }
     </style>
 </head>
 
 <body>
-    <div class="container mt-5">
-        <h2>Jewels Available</h2>
-        <table class="table" id="jewel-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Dynamic content will be appended here -->
-            </tbody>
-        </table>
-    </div>
+    @include('user.navbar')
 
-    <!-- Purchase Form Modal -->
-    <div class="modal fade" id="purchaseModal" tabindex="-1" aria-labelledby="purchaseModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="purchaseModalLabel">Purchase Form</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="purchase-form" method="POST" action="{{ route('purchase.store') }}">
-                        @csrf
-                        <div class="mb-4">
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="jewel_name">Jewel Name</label>
-                                    <input type="text" class="form-control" id="jewel_name" name="jewel_name" readonly>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 jewel-container">
+                <h2 class="section-title">Purchase Page</h2>
+                <div class="jewel-details">
+                    <h5 class="jewel-name">{{ $jewels->name }}</h5>
+                    <p class="jewel-price">Price: ${{ $jewels->price }}</p>
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#purchaseModal">Purchase</button>
+
+                    <!-- Purchase Modal -->
+                    <div class="modal fade" id="purchaseModal" tabindex="-1" aria-labelledby="purchaseModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="purchaseModalLabel">Purchase Form</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="jewel_price">Price</label>
-                                    <input type="text" class="form-control" id="jewel_price" name="jewel_price" readonly>
+                                <div class="modal-body">
+                                    <form id="purchase-form">
+                                        @csrf
+                                        <div class="mb-4">
+                                            <label for="jewel_name">Jewel Name</label>
+                                            <input type="text" class="form-control" id="jewel_name" name="jewel_name" value="{{ $jewels->name }}" readonly>
+                                            <input type="hidden" name="jewel_id" value="{{ $jewels->id }}">
+                                            <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="quantity">Quantity</label>
+                                            <input type="number" class="form-control quantity" id="quantity" name="quantity" min="1" value="1">
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="total_price">Total Price</label>
+                                            <input type="text" class="form-control" id="total_price" name="total_price" value="{{ $jewels->price }}" readonly>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="customer_name">Customer Name</label>
+                                            <input type="text" class="form-control" id="customer_name" name="customer_name" required>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="email">Email</label>
+                                            <input type="email" class="form-control" id="email" name="email" required>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="mobile_number">Mobile Number</label>
+                                            <input type="text" class="form-control" id="mobile_number" name="mobile_number" required>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="zip_code">Zip Code</label>
+                                            <input type="text" class="form-control" id="zip_code" name="zip_code" required>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="address">Address</label>
+                                            <textarea class="form-control" id="address" name="address" required></textarea>
+                                        </div>
+
+                                        <!-- Payment Method -->
+                                        <div class="form-group">
+                                            <label for="payment_method">Payment Method</label>
+                                            <select class="form-control" id="payment_method" name="payment_method" required>
+                                                <option value="">Select Payment Method</option>
+                                                <option value="card">Credit/Debit Card</option>
+                                                <option value="razorpay">Razorpay</option>
+                                                <option value="cash_on_delivery">Cash on Delivery</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Card Payment Fields -->
+                                        <div id="card-fields" style="display: none;">
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="card_name">Cardholder Name</label>
+                                                    <input type="text" class="form-control" id="card_name" name="card_name">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="card_number">Card Number</label>
+                                                    <input type="text" class="form-control" id="card_number" name="card_number">
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="expiry_date">Expiry Date</label>
+                                                    <input type="text" class="form-control" id="expiry_date" name="expiry_date" placeholder="MM/YY">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="cvv">CVV</label>
+                                                    <input type="text" class="form-control" id="cvv" name="cvv">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Razorpay Payment Fields -->
+                                        <div id="razorpay-fields" style="display: none;">
+                                            <div class="form-group">
+                                                <label for="razorpay_payment_id">Razorpay Payment ID</label>
+                                                <input type="text" class="form-control" id="razorpay_payment_id" name="razorpay_payment_id">
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-success w-100">Submit</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <input type="hidden" name="jewel_id" id="jewel_id">
-                        <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="size">Size</label>
-                                <input type="text" class="form-control" id="size" name="size" required>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="quantity">Quantity</label>
-                                <input type="number" class="form-control" id="quantity" name="quantity" min="1" required>
-                            </div>
-                        </div>
-
-                        <div class="form-row mb-4">
-                            <div class="form-group col-md-6">
-                                <label for="total_price">Total Price</label>
-                                <input type="text" class="form-control" id="total_price" name="total_price" readonly>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="payment_method">Payment Method</label>
-                            <select class="form-control" id="payment_method" name="payment_method" required>
-                                <option value="">Select Payment Method</option>
-                                <option value="card">Credit/Debit Card</option>
-                                <option value="razorpay">Razorpay</option>
-                                <option value="cash_on_delivery">Cash on Delivery</option>
-                            </select>
-                        </div>
-
-                        <div id="card-fields" class="hidden">
-                            <div class="form-group">
-                                <label for="card_name">Cardholder Name</label>
-                                <input type="text" class="form-control" id="card_name" name="card_name">
-                            </div>
-                            <div class="form-group">
-                                <label for="card_number">Card Number</label>
-                                <input type="text" class="form-control" id="card_number" name="card_number">
-                            </div>
-                            <div class="form-group">
-                                <label for="expiry_date">Expiry Date</label>
-                                <input type="text" class="form-control" id="expiry_date" name="expiry_date" placeholder="MM/YY">
-                            </div>
-                            <div class="form-group">
-                                <label for="cvv">CVV</label>
-                                <input type="text" class="form-control" id="cvv" name="cvv">
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
+                    <!-- Response Message Area -->
+                    <div class="alert alert-dismissible fade show d-none" role="alert" id="response-message">
+                        <span id="message-content"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+<!-- footer -->
+@include('home.footer')
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
     <script>
         $(document).ready(function () {
-            // Fetch jewels on page load
-            fetchJewels();
-
-            function fetchJewels() {
-                $.ajax({
-                    url: '/purchasepageshow', // Ensure this route is correct
-                    type: 'GET',
-                    success: function (data) {
-                        const tbody = $('#jewel-table tbody');
-                        tbody.empty(); // Clear the table body
-
-                        // Append new rows to the table
-                        $.each(data, function (index, jewel) {
-                            const row = `<tr>
-                                <td>${jewel.id}</td>
-                                <td>${jewel.customer_name}</td>
-                                <td>$${jewel.amount}</td>
-                                <td>
-                                    <button class="btn btn-success payment-btn" data-id="${jewel.id}">Payment</button>
-                                </td>
-                            </tr>`;
-                            tbody.append(row);
-                        });
-                    },
-                    error: function () {
-                        alert('Error fetching jewels');
-                    }
-                });
-            }
-
-            $(document).on('click', '.payment-btn', function () {
-                var jewelId = $(this).data('id');
-
-                // Fetch jewel details via AJAX based on the jewel ID
-                $.ajax({
-                    url: '/purchasepageshow/' + jewelId, // Ensure this route is correct
-                    type: 'GET',
-                    success: function (data) {
-                        if (!data.error) {
-                            $('#jewel_id').val(data.id);
-                            $('#jewel_name').val(data.customer_name); // Ensure this key matches your response
-                            $('#jewel_price').val(data.amount); // Ensure this key matches your response
-                            $('#quantity').val(1); // Set default quantity to 1
-                            $('#total_price').val(data.amount); // Set initial total price based on jewel price
-
-                            // Show the purchase modal
-                            $('#purchaseModal').modal('show');
-                        } else {
-                            alert(data.error);
-                        }
-                    },
-                    error: function () {
-                        alert('Error fetching jewel details');
-                    }
-                });
-            });
-
-            // Update total price based on quantity
+            // Calculate total price based on quantity
             $('#quantity').on('input', function () {
-                var quantity = parseInt($(this).val(), 10) || 0; // Get quantity as an integer
-                var price = parseFloat($('#jewel_price').val()) || 0; // Get price as a float
-                var totalPrice = quantity * price;
-                $('#total_price').val(totalPrice.toFixed(2)); // Update total price to two decimal places
+                var quantity = $(this).val();
+                var price = {{ $jewels->price }};
+                $('#total_price').val(price * quantity);
             });
 
-            // Show/hide payment fields based on payment method
-            $('#payment_method').change(function () {
-                var selectedMethod = $(this).val();
-                if (selectedMethod === 'card') {
-                    $('#card-fields').removeClass('hidden').fadeIn();
+            // Show/hide payment fields based on selected payment method
+            $('#payment_method').on('change', function () {
+                var method = $(this).val();
+                if (method === 'card') {
+                    $('#card-fields').show();
+                    $('#razorpay-fields').hide();
+                } else if (method === 'razorpay') {
+                    $('#razorpay-fields').show();
+                    $('#card-fields').hide();
                 } else {
-                    $('#card-fields').addClass('hidden').fadeOut(); // Optional: Use fadeOut for a smoother effect
+                    $('#card-fields, #razorpay-fields').hide();
                 }
             });
 
-            // Handle form submission via AJAX
-            $('#purchase-form').on('submit', function (event) {
-                event.preventDefault(); // Prevent the default form submission
-
-                const formData = $(this).serialize();
-
+            // Submit the purchase form
+            $('#purchase-form').on('submit', function (e) {
+                e.preventDefault();
                 $.ajax({
-                    url: "{{ route('purchase.store') }}", // Ensure this route is correct
-                    type: "POST",
-                    data: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
+                    type: 'POST',
+                    url: '{{ route('purchase.store') }}',
+                    data: $(this).serialize(),
                     success: function (response) {
-                        alert('Purchase successful!'); // Handle success
-                        $('#purchaseModal').modal('hide'); // Hide modal
-                        $('#purchase-form')[0].reset(); // Reset form
-                        fetchJewels(); // Refresh the jewels list
+                        $('#message-content').text(response.message);
+                        $('#response-message').removeClass('d-none').addClass('alert-success');
+                        $('#purchaseModal').modal('hide');
                     },
                     error: function (xhr) {
-                        const errors = xhr.responseJSON.errors;
-                        let errorMessages = '';
-                        $.each(errors, function (key, value) {
-                            errorMessages += value[0] + '\n';
-                        });
-                        alert('Error: \n' + errorMessages); // Display error messages
+                        $('#message-content').text(xhr.responseJSON.message || 'An error occurred.');
+                        $('#response-message').removeClass('d-none').addClass('alert-danger');
                     }
                 });
             });

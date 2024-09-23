@@ -58,15 +58,13 @@ Route::post('/jewel/{id}/query', [JewelQueryController::class, 'submitQuery'])->
 //userpart
 Route::get('/fetch_jewel', action: [UserController::class, 'fetch_jewels'])->name('fetchjewel');
 
-Route::get('/jewel/{id}', [PurchaseController::class,'purchases'])->name('jewel.show');
 
 Route::get('/jewel/status', [UserController::class, 'showJewelStatus'])->name('jewel.status');
 
 Route::get('/jewel/status/{id}', [UserController::class, 'showJewelStatus'])->name('jewel.status');
 Route::get('/showcustomizationqueries',[UserController::class,'showcustomizationqueries'])->name('show_customization_queries');
 
-Route::get('/purchasepageshow/{id}',[PurchaseController::class,'show_purchase']);
-Route::get('/purchasepageshow', [PurchaseController::class, 'purchases']); // Fetch all jewels
+Route::get('/purchasepageshow/{id}', [PurchaseController::class, 'purchases']); // Fetch all jewels
 
 
 Route::post('/addpurchase',[PurchaseController::class,'storepurchasedetails'])->name('purchase.store');
@@ -92,3 +90,8 @@ Route::post('/profile', [ProfileController::class, 'update'])->name('profile.upd
 
 //chat part
 Route::get('/chat', [ChatController::class, 'chat'])->name('chat');
+
+
+//particular jewel fetchign here
+Route::get('/jewel/{id}', [UserController::class,'show_jewe'])->name('jewel.show');
+

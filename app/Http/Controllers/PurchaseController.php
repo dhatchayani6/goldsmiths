@@ -14,19 +14,7 @@ use App\Models\Customqueries;
 
 class PurchaseController extends Controller
 {
-    public function show_purchase($id)
-    {
-        // Fetch the jewel data based on its ID
-        $fetchjewel = Jewel::find($id); // Or use where clause if needed
 
-        // Check if jewel exists
-        if (!$fetchjewel) {
-            return redirect()->back()->with('error', 'Jewel not found.');
-        }
-
-        // Pass the $fetchjewel data to the view
-        return view('user.purchase', compact('fetchjewel'));
-    }
 
     public function storepurchasedetails(Request $request)
     {
@@ -61,11 +49,11 @@ class PurchaseController extends Controller
         $purchase->amount = $request->input('amount'); // Store the amount
         $purchase->total_price = $request->input('total_price'); // Store the total price
         $purchase->customer_name = $request->input('customer_name');
-        
+
         // Capture size and quantity
         $purchase->size = $request->input('size'); // Save size
         $purchase->quantity = $request->input('quantity'); // Save quantity
-        
+
         $purchase->email = $request->input('email');
         $purchase->mobile_number = $request->input('mobile_number');
         $purchase->zip_code = $request->input('zip_code');
@@ -91,53 +79,63 @@ class PurchaseController extends Controller
         // Return a success response
         return response()->json(['message' => 'Purchase completed successfully!'], 200);
     }
-    
+
     public function fetch_jewel()
     {
         $fetchjewel = Jewel::all();
         return response()->json($fetchjewel);
     }
 
-   
+
     public function updateStatus(Request $request)
-{
-    // Validate the incoming request
-    $request->validate([
-        'status' => 'required|in:pending,complete,failed',
-        'id' => 'required|integer|exists:purchases,id'
-    ]);
+    {
+        // Validate the incoming request
+        $request->validate([
+            'status' => 'required|in:pending,complete,failed',
+            'id' => 'required|integer|exists:purchases,id'
+        ]);
 
-    // Find the purchase by ID
-    $purchase = Purchase::find($request->input('id'));
+        // Find the purchase by ID
+        $purchase = Purchase::find($request->input('id'));
 
-    if ($purchase) {
-        // Update the status in the purchases table
-        $purchase->status = $request->input('status');
-        $purchase->save();
+        if ($purchase) {
+            // Update the status in the purchases table
+            $purchase->status = $request->input('status');
+            $purchase->save();
 
-        // Update the status in the custom queries table based on jewel_id and user_id
-        Customqueries::where('jewel_id', $purchase->jewel_id)
-            ->where('user_id', $purchase->user_id)
-            ->update(['status' => $purchase->status]);
+            // Update the status in the custom queries table based on jewel_id and user_id
+            Customqueries::where('jewel_id', $purchase->jewel_id)
+                ->where('user_id', $purchase->user_id)
+                ->update(['status' => $purchase->status]);
 
-        return response()->json(['message' => 'Status updated successfully!']);
+            return response()->json(['message' => 'Status updated successfully!']);
+        }
+
+        return response()->json(['message' => 'Purchase not found.'], 404);
     }
 
-    return response()->json(['message' => 'Purchase not found.'], 404);
-}
 
-
-    public function getcustomize(){
+    public function getcustomize()
+    {
         return view('user.customize-jewel');
     }
 
-       // In your controller
-public function purchases() {
-    // Fetch purchase data from the database (adjust model and logic as necessary)
-    $fetchpurchase = Purchase::all(); // Assuming you are fetching all purchases
+    // In your controller
+    public function purchases($id)
+{
+    // Fetch the jewel by its ID
+    $jewels = Jewel::findOrFail($id); // This will throw an error if not found
 
-    // Return view and pass the data
-    // return view('smith.payment-status', compact('fetchpurchase'));//
-    return response()->json($fetchpurchase);
+    // Return the view and pass the jewel data
+    return view('user.purchase', compact('jewels'));
 }
+
+
+
+
+    public function getpurchase()
+    {
+        $fetchpurchase = Purchase::all();
+        return view('smith.payment-status', compact('fetchpurchase'));
+    }
 }
