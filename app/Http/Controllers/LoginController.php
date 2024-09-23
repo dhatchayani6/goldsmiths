@@ -46,6 +46,7 @@ class LoginController extends Controller
                 Auth::login($user);
 
                 return response()->json([
+                    'success'=>true,
                     'message' => 'Login successfully',
                     'user' => $user
                 ], 200);
@@ -86,7 +87,7 @@ class LoginController extends Controller
             $register->password = Hash::make($request->input('password'));
             $register->save();
 
-            return response()->json(['message' => 'Registered successfully'], 200);
+            return response()->json(['sucess'=>true,'message' => 'Registered successfully','data'=>$register], 200);
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Handle validation errors
             return response()->json([

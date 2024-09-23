@@ -26,7 +26,7 @@ return view('smith.add_jewelery');
             'jewelryWeight' => ['required', 'numeric'],
             'jewelryPrice' => 'required|numeric|min:0',
             'jewelryDescription' => 'required|nullable|string',
-            'jewelryImage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'jewelryImage' => 'NULLABLE|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         try {
