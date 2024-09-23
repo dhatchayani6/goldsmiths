@@ -13,7 +13,6 @@
             font-family: 'Arial', sans-serif;
             background-color: #f4f4f4;
             margin: 0;
-            padding: 20px;
         }
 
         .container {
@@ -100,6 +99,8 @@
 </head>
 
 <body>
+    @include('smith.navabr')
+
     <div class="container mt-5">
         <h1>User Queries</h1>
         <table>
@@ -117,7 +118,7 @@
             </thead>
             <tbody>
                 @foreach($userQueries as $query)
-                    <tr>
+                    <tr data-query-id="{{ $query->id }}">
                         <td>{{ $query->id }}</td>
                         <td>{{ $query->query }}</td>
                         <td>{{ $query->user_id }}</td>
@@ -222,10 +223,46 @@
             }
         });
 
+        // Accept button click event
+        $('.accept-btn').click(function () {
+            var row = $(this).closest('tr');
+            var queryId = row.data('query-id');
+
+            $.ajax({
+                url: '/query/accept/' + queryId, // Ensure this route is correct
+                type: 'POST',
+                success: function (response) {
+                    alert('Query accepted successfully!');
+                    location.reload(); // Reload to reflect changes
+                },
+                error: function (error) {
+                    alert('Error accepting query.');
+                }
+            });
+        });
+
+        // Reject button click event
+        $('.reject-btn').click(function () {
+            var row = $(this).closest('tr');
+            var queryId = row.data('query-id');
+
+            $.ajax({
+                url: '/query/reject/' + queryId, // Ensure this route is correct
+                type: 'POST',
+                success: function (response) {
+                    alert('Query rejected successfully!');
+                    location.reload(); // Reload to reflect changes
+                },
+                error: function (error) {
+                    alert('Error rejecting query.');
+                }
+            });
+        });
+
         // Show modal with query ID and product details
         $('.customize-btn').click(function () {
             var queryId = $(this).data('query-id');
-            var productName = $(this).data('customer-name'); // Adjusted this line
+            var productName = $(this).data('customer-name');
             var productId = $(this).data('product-id');
             var productImage = $(this).data('product-image');
             var jewelId = $(this).data('jewel-id');
@@ -246,13 +283,13 @@
             e.preventDefault();
             var formData = $(this).serialize();
             $.ajax({
-                url: '/query/customize-payment', // Update with the correct route
+                url: '/query/customize-payment', // Ensure this route is correct
                 type: 'POST',
                 data: formData,
                 success: function (response) {
                     alert('Payment customized successfully!');
                     $('#customizePaymentModal').modal('hide');
-                    // Optionally, reload the table or update the UI
+                    location.reload(); // Reload the page or update the table as needed
                 },
                 error: function (error) {
                     if (error.responseJSON && error.responseJSON.message) {

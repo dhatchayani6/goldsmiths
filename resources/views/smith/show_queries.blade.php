@@ -7,6 +7,8 @@
     <title>Jewel Queries</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <style>
         body {
             background-color: #f7f7f7;
@@ -33,6 +35,8 @@
 </head>
 
 <body>
+    @include('smith.navabr')
+    
     <div class="container table-container">
         <h1 class="my-4">User Queries About Jewels</h1>
 

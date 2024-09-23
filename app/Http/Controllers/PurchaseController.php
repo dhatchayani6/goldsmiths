@@ -134,5 +134,9 @@ class PurchaseController extends Controller
         return view('user.customize-jewel');
     }
 
+    public function purchases(){
+        $purchases=Purchase::all();
+        return view('smith.payment-status',compact('purchases'));
+    }
    
 }

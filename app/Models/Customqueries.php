@@ -12,4 +12,10 @@ class Customqueries extends Model
 {
     return $this->belongsTo(Jewel::class);
 }
+
+public function customQuery()
+{
+    return $this->hasOne(CustomQueries::class, 'user_id'); // Adjust the foreign key as necessary
+}
+
 }

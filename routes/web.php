@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\JewelController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -65,6 +66,8 @@ Route::get('/jewel/status/{id}', [UserController::class, 'showJewelStatus'])->na
 Route::get('/showcustomizationqueries',[UserController::class,'showcustomizationqueries'])->name('show_customization_queries');
 
 Route::get('/purchasepageshow/{id}',[PurchaseController::class,'show_purchase']);
+Route::get('/purchasepageshow', [PurchaseController::class, 'purchases']); // Fetch all jewels
+
 
 Route::post('/addpurchase',[PurchaseController::class,'storepurchasedetails'])->name('purchase.store');
 
@@ -83,3 +86,9 @@ Route::post('/query/reject/{id}', [UserQueriesController::class, 'reject']);
 Route::post('/query/customize-payment', [CustomqueriesController::class, 'store_customqueries'])->name('query.customizePayment');
 
 
+// profile part
+Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show'); // Display the profile
+Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update'); // Update profile info
+
+//chat part
+Route::get('/chat', [ChatController::class, 'chat'])->name('chat');

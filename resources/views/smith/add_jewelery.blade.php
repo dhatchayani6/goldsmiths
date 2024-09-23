@@ -47,29 +47,8 @@
 
 <body>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="#">Goldsmith Admin Panel</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                @if (Auth::check())
-                    <li>
-                        <form method="post" action="{{ route('logout') }}">
-                            @csrf
-                            <button class="btn btn-primary">LOGOUT ({{ Auth::user()->name }})</button>
-                        </form>
-                    </li>
-                @endif
-            </ul>
-        </div>
-    </nav>
+@include('smith.navabr')
+
 
     <!-- Page Content -->
     <div id="content-wrapper">
