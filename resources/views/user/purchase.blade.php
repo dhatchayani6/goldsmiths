@@ -143,7 +143,6 @@
                     url: '/purchasepageshow', // Ensure this route is correct
                     type: 'GET',
                     success: function (data) {
-                        console.log(data); // Log data for debugging
                         const tbody = $('#jewel-table tbody');
                         tbody.empty(); // Clear the table body
 
@@ -151,8 +150,8 @@
                         $.each(data, function (index, jewel) {
                             const row = `<tr>
                                 <td>${jewel.id}</td>
-                                <td>${jewel.name}</td>
-                                <td>$${jewel.price}</td>
+                                <td>${jewel.customer_name}</td>
+                                <td>$${jewel.amount}</td>
                                 <td>
                                     <button class="btn btn-success payment-btn" data-id="${jewel.id}">Payment</button>
                                 </td>
@@ -174,12 +173,12 @@
                     url: '/purchasepageshow/' + jewelId, // Ensure this route is correct
                     type: 'GET',
                     success: function (data) {
-                        console.log(data); // Log the data received
                         if (!data.error) {
                             $('#jewel_id').val(data.id);
-                            $('#jewel_name').val(data.name);
-                            $('#jewel_price').val(data.price);
-                            $('#total_price').val(data.price); // Set initial total price
+                            $('#jewel_name').val(data.customer_name); // Ensure this key matches your response
+                            $('#jewel_price').val(data.amount); // Ensure this key matches your response
+                            $('#quantity').val(1); // Set default quantity to 1
+                            $('#total_price').val(data.amount); // Set initial total price based on jewel price
 
                             // Show the purchase modal
                             $('#purchaseModal').modal('show');
@@ -195,10 +194,10 @@
 
             // Update total price based on quantity
             $('#quantity').on('input', function () {
-                var quantity = $(this).val();
-                var price = $('#jewel_price').val();
+                var quantity = parseInt($(this).val(), 10) || 0; // Get quantity as an integer
+                var price = parseFloat($('#jewel_price').val()) || 0; // Get price as a float
                 var totalPrice = quantity * price;
-                $('#total_price').val(totalPrice.toFixed(2)); // Update total price
+                $('#total_price').val(totalPrice.toFixed(2)); // Update total price to two decimal places
             });
 
             // Show/hide payment fields based on payment method
@@ -207,7 +206,7 @@
                 if (selectedMethod === 'card') {
                     $('#card-fields').removeClass('hidden').fadeIn();
                 } else {
-                    $('#card-fields').addClass('hidden');
+                    $('#card-fields').addClass('hidden').fadeOut(); // Optional: Use fadeOut for a smoother effect
                 }
             });
 

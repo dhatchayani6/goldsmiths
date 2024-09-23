@@ -98,10 +98,7 @@ class PurchaseController extends Controller
         return response()->json($fetchjewel);
     }
 
-    public function getpurchase(){
-        $fetchpurchase = Purchase::all();
-        return view('smith.payment-status',compact('fetchpurchase')); 
-    }
+   
     public function updateStatus(Request $request)
 {
     // Validate the incoming request
@@ -134,9 +131,13 @@ class PurchaseController extends Controller
         return view('user.customize-jewel');
     }
 
-    public function purchases(){
-        $purchases=Purchase::all();
-        return view('smith.payment-status',compact('purchases'));
-    }
-   
+       // In your controller
+public function purchases() {
+    // Fetch purchase data from the database (adjust model and logic as necessary)
+    $fetchpurchase = Purchase::all(); // Assuming you are fetching all purchases
+
+    // Return view and pass the data
+    // return view('smith.payment-status', compact('fetchpurchase'));//
+    return response()->json($fetchpurchase);
+}
 }

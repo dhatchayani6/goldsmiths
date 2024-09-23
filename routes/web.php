@@ -58,7 +58,7 @@ Route::post('/jewel/{id}/query', [JewelQueryController::class, 'submitQuery'])->
 //userpart
 Route::get('/fetch_jewel', action: [UserController::class, 'fetch_jewels'])->name('fetchjewel');
 
-Route::get('/jewel/{id}', [UserController::class,'show_jewe'])->name('jewel.show');
+Route::get('/jewel/{id}', [PurchaseController::class,'purchases'])->name('jewel.show');
 
 Route::get('/jewel/status', [UserController::class, 'showJewelStatus'])->name('jewel.status');
 

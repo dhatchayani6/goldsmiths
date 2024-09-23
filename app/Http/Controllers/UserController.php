@@ -63,6 +63,13 @@ class UserController extends Controller
         $showcustomizationqueries = Customqueries::all();
         return view('user.myqueries', compact('showcustomizationqueries'));
     }
+
+    public function getpurchase(){
+        $fetchpurchase = Purchase::all();
+        return view('smith.payment-status',compact('fetchpurchase')); 
+    }
+
+    
     
 
     

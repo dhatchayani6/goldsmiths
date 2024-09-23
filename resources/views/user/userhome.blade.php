@@ -103,10 +103,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{route('chat')}}">Messages</a>
                 </li>
-                
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Status</a>
-                </li>
                
                 @if (Auth::check())
                 <form class="form-inline" method="post" action="{{ route('logout') }}">
