@@ -100,7 +100,6 @@
                     <th>ID</th>
                     <th>Query</th>
                     <th>User ID</th>
-                    <th>Jewel Image</th>
                     <th>Status</th>
                     <th>Total Price</th>
                     <th>Action</th>
@@ -112,9 +111,7 @@
                         <td>{{ $customizequeries->id }}</td>
                         <td>{{ $customizequeries->jewel_id }}</td>
                         <td>{{ $customizequeries->user_id }}</td>
-                        <td>
-                            {{$customizequeries->jewel_image}}
-                        </td>
+                        
                         <td>{{ $customizequeries->status }}</td>
                         <td>${{ number_format($customizequeries->total_price, 2) }}</td> <!-- Proper currency formatting -->
                         <td>

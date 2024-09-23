@@ -66,6 +66,8 @@ Route::get('/jewel/status/{id}', [UserController::class, 'showJewelStatus'])->na
 Route::get('/showcustomizationqueries',[UserController::class,'showcustomizationqueries'])->name('show_customization_queries');
 
 Route::get('/purchasepageshow/{id}',[PurchaseController::class,'show_purchase']);
+Route::get('/purchasepageshow', [PurchaseController::class, 'purchases']); // Fetch all jewels
+
 
 Route::post('/addpurchase',[PurchaseController::class,'storepurchasedetails'])->name('purchase.store');
 

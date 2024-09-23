@@ -31,6 +31,8 @@ Route::post( '/jewel_store', action: [JewelController::class, 'store_jewel'])->n
 
 //user part
 Route::get('/fetch_jewel', action: [UserController::class, 'fetch_jewels'])->name('fetchjewel');
+Route::get('/purchasepageshow/{id}',[PurchaseController::class,'show_purchase']);
+Route::get('/purchasepageshow', [PurchaseController::class, 'purchases']); // Fetch all jewels
 
 
 
