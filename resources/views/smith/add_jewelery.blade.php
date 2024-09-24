@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <style>
-        html, body {
+        html,
+        body {
             height: 100%;
             margin: 0;
         }
@@ -22,7 +23,8 @@
         }
 
         .navbar {
-            background: #ffcc00; /* Gold color */
+            background: #ffcc00;
+            /* Gold color */
         }
 
         #content-wrapper {
@@ -42,34 +44,33 @@
             padding: 10px;
             color: #666;
         }
-    </style> 
+
+        #successMessage {
+            display: none;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 
 <body>
 
-@include('smith.navabr')
-
+    @include('smith.navabr')
 
     <!-- Page Content -->
     <div id="content-wrapper">
         <div class="container mt-4">
             <h1 class="mb-4">Add New Jewelry</h1>
 
+            <!-- Success Message -->
+            <div id="successMessage" class="alert alert-success" role="alert"></div>
+
             <!-- Jewelry Form -->
             <div class="row">
                 <div class="col-md-12">
                     <div class="card-body">
-                        <form method="POST" action="{{ route('jewel.store') }}" enctype="multipart/form-data">
+                        <form id="addJewelryForm" enctype="multipart/form-data">
                             @csrf
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
+                            <div id="alertMessage" class="alert d-none"></div>
 
                             <div class="form-row">
                                 <div class="form-group col-md-6">
@@ -105,15 +106,16 @@
 
                             <div class="form-group">
                                 <label for="jewelryDescription">Description</label>
-                                <textarea class="form-control" id="jewelryDescription" name="jewelryDescription" rows="3"
-                                    placeholder="Enter jewelry description"></textarea>
+                                <textarea class="form-control" id="jewelryDescription" name="jewelryDescription"
+                                    rows="3" placeholder="Enter jewelry description"></textarea>
                             </div>
 
                             <div class="form-group">
                                 <label for="jewelryImage">Upload Image</label>
-                                <input type="file" class="form-control-file" id="jewelryImage" name="jewelryImage" accept="image/*">
+                                <input type="file" class="form-control-file" id="jewelryImage" name="jewelryImage"
+                                    accept="image/*">
                             </div>
-                            
+
                             <button type="submit" class="btn btn-primary">Add Jewelry</button>
                         </form>
                     </div>
@@ -127,13 +129,70 @@
         <p>&copy; 2024 Goldsmith Admin Panel. All Rights Reserved.</p>
     </div>
 
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
+    <!-- jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+
+        <script>
+    $(document).ready(function () {
+        $('#addJewelryForm').on('submit', function (e) {
+            e.preventDefault(); // Prevent form from submitting the default way
+
+            // Create a FormData object to hold the form data
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: "{{ route('jewel.store') }}",  // Laravel route to handle form submission
+                method: "POST",
+                data: formData,
+                contentType: false,  // For file uploads, this must be false
+                processData: false,  // For file uploads, this must be false
+                success: function (response) {
+                    if (response.status === 'success') {
+                        // Show the success message
+                        $('#successMessage').text('Jewelry added successfully!').show();  // Show success message
+                        
+                        // Reset the form after successful submission
+                        $('#addJewelryForm')[0].reset();
+
+                        // Reload the page after a brief delay
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1000); // Adjust the delay as needed
+
+                        // Optionally hide the success message after a few seconds
+                        setTimeout(function () {
+                            $('#successMessage').fadeOut();
+                        }, 5000);
+                    }
+                },
+                error: function (response) {
+                    var errors = response.responseJSON.errors;
+                    var errorHtml = '<ul>';
+                    $.each(errors, function (key, value) {
+                        errorHtml += '<li>' + value[0] + '</li>';
+                    });
+                    errorHtml += '</ul>';
+
+                    $('#alertMessage')
+                        .removeClass('d-none alert-success')
+                        .addClass('alert-danger')
+                        .html(errorHtml)
+                        .fadeIn();
+
+                    // Optionally hide the alert after a few seconds
+                    setTimeout(function () {
+                        $('#alertMessage').fadeOut();
+                    }, 5000);
+                }
+            });
+        });
+    });
+</script>
+
+
 </body>
 
 </html>

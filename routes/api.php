@@ -6,6 +6,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JewelController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\UserQueriesController;
+use App\Http\Controllers\JewelQueryController;
+use App\Http\Controllers\CustomqueriesController;
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -22,11 +28,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/login',[LoginController::class,'login']);
-Route::post('/register',[LoginController::class,'register']);
-
 // admin part
-Route::post( '/jewel_store', action: [JewelController::class, 'store_jewel'])->name('jewel.store');
 
 //user part
 Route::get('/fetch_jewel', action: [UserController::class, 'fetch_jewels'])->name('fetchjewel');
@@ -74,3 +76,16 @@ Route::post('/query/reject/{id}', [UserQueriesController::class, 'reject']);
 Route::post('/query/customize-payment', [CustomqueriesController::class, 'store_customqueries'])->name('query.customizePayment');
 
 
+
+
+
+
+
+//correct api file
+
+//login and register
+Route::post('/login',[LoginController::class,'login']);
+Route::post('/register',[LoginController::class,'register']);
+
+//add jewelery part
+Route::post( '/jewel_store', action: [JewelController::class, 'store_jewel'])->name('jewel.store');
