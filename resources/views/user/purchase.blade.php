@@ -76,6 +76,12 @@
             position: fixed;
             bottom: 0 !important;
         }
+        .navbar-light .navbar-nav .nav-link{
+            color: black;
+        }
+        .navbar-light .navbar-nav .nav-link:hover{
+            color: black;
+        }
     </style>
 </head>
 

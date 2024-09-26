@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Details</title>
+    <title>Jewel Details</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
@@ -12,7 +12,7 @@
             background-color: #f8f9fa;
             display: flex;
             flex-direction: column;
-            min-height: 100vh; /* Ensures the footer stays at the bottom */
+            min-height: 100vh;
         }
         .jewel-container {
             background: #fff;
@@ -50,7 +50,18 @@
             font-weight: bold;
             color: #007bff;
         }
-        
+        .navbar-light .navbar-nav .nav-link{
+            color: black;
+        }
+        .navbar-light .navbar-nav .nav-link:hover{
+            color: black;
+        }
+        .btn-purchasenavbar-brand{
+            color: black;
+        }
+        .navbar-brand{
+            color: black !important;
+        }
     </style>
 </head>
 
@@ -100,30 +111,28 @@
             </div>
 
             <!-- Queries List -->
-            <div id="queriesList" class="col-lg-8"></div>
+            <div id="queriesList" class="col-lg-8 mt-4"></div>
 
         </div>
     </div>
     
-    <!-- Footer -->
-    <!-- <div class="footer">
-        <p>© 2024 Gold Smith. All Rights Reserved.</p>
-    </div> -->
     @include('home.footer')
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function () {
+            // Submit Query Form via AJAX
             $('#queryForm').on('submit', function (event) {
-                event.preventDefault();
+                event.preventDefault(); // Prevent default form submission
 
                 $.ajax({
-                    url: $(this).attr('action'),
+                    url: $(this).attr('action'), // Form action URL
                     type: 'POST',
-                    data: $(this).serialize(),
+                    data: $(this).serialize(), // Send form data
                     success: function (response) {
                         alert('Your query has been submitted successfully!');
-                        $('#queryForm')[0].reset();
+                        $('#queryForm')[0].reset(); // Clear form fields
+                        fetchQueries(); // Refresh the query list after submission
                     },
                     error: function (xhr) {
                         console.error(xhr.responseText);
@@ -132,31 +141,37 @@
                 });
             });
 
-            $.ajax({
-                url: '{{ route('jewel.show', $jewel->id) }}',
-                type: 'GET',
-                success: function (response) {
-                    let queriesHtml = '';
-                    if (response.length > 0) {
-                        response.forEach(function (query) {
-                            queriesHtml += `
-                                <div class="query-item">
-                                    <h5 class="query-name">${query.query_name}</h5>
-                                    <p class="query-email">Email: ${query.query_email}</p>
-                                    <p class="query-message">${query.query_message}</p>
-                                    <hr>
-                                </div>
-                            `;
-                        });
-                    } else {
-                        queriesHtml = '<p>No queries found.</p>';
+            // Function to fetch queries via AJAX
+            function fetchQueries() {
+                $.ajax({
+                    url: '{{ route('jewel.show', $jewel->id) }}', // Update with route for fetching queries
+                    type: 'GET',
+                    success: function (response) {
+                        let queriesHtml = '';
+                        if (response.length > 0) {
+                            response.forEach(function (query) {
+                                queriesHtml += `
+                                    <div class="query-item">
+                                        <h5 class="query-name">${query.query_name}</h5>
+                                        <p class="query-email">Email: ${query.query_email}</p>
+                                        <p class="query-message">${query.query_message}</p>
+                                        <hr>
+                                    </div>
+                                `;
+                            });
+                        } else {
+                            queriesHtml = '<p>No queries found.</p>';
+                        }
+                        $('#queriesList').html(queriesHtml); // Populate the queries list
+                    },
+                    error: function (xhr) {
+                        $('#queriesList').html('<p>An error occurred while fetching queries.</p>');
                     }
-                    $('#queriesList').html(queriesHtml);
-                },
-                error: function (xhr) {
-                    $('#queriesList').html('<p>An error occurred while fetching queries.</p>');
-                }
-            });
+                });
+            }
+
+            // Initially fetch and display queries
+            fetchQueries();
         });
     </script>
 </body>

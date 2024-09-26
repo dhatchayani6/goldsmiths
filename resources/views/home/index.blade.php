@@ -64,7 +64,7 @@
         }
 
         .footer {
-            background-color: #343a40;
+            background-color: #f7f7f7;
             color: white;
             padding: 20px 0;
         }

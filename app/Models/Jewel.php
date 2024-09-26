@@ -13,6 +13,7 @@ class Jewel extends Model
 
     // Specify the fillable attributes
     protected $fillable = [
+        'id',
         'name',
         'description',
         'price',

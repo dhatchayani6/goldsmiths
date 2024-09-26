@@ -29,13 +29,24 @@
             animation: slideUp 0.5s ease-out;
         }
         footer {
-            background-color: #f8f9fa;
-            padding: 20px 0;
+            background-color: #f7f7f7 !important;
             text-align: center;
-            position: relative;
+            position: fixed;
             bottom: 0;
             width: 100%;
         }
+        .navbar-light .navbar-nav .nav-link{
+            color:black;
+        }
+
+        .navbar-light .navbar-nav .nav-link:hover{
+            color: black;
+        }
+        /* .navbar{
+            position: fixed;
+            top: 0;
+            width: 100%;
+        } */
     </style>
 </head>
 <body>
@@ -46,7 +57,6 @@
         <h2>User Query Form</h2>
         <form id="query-form" class="fade-in" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="jewel_id" value="{{ $jewelId }}">
-            <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
 
             <div class="form-group">
                 <label for="image_file">Upload Image</label>

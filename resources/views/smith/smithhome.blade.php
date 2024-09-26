@@ -17,7 +17,7 @@
         body {
             height: 100%;
             margin: 0;
-            font-family: 'Roboto', sans-serif;
+            font-family: sans-serif;
         }
 
         body {
@@ -91,6 +91,12 @@
             .card {
                 margin-bottom: 20px;
             }
+        }
+        .navbar-light .navbar-nav .nav-link{
+            color: black;
+        }
+        .navbar-light .navbar-nav .nav-link:hover{
+            color: black;
         }
     </style>
 </head>

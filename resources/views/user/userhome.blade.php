@@ -8,7 +8,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
+        html,
         body {
+            height: 100%;
+            margin: 0;
+            font-family: sans-serif;
+        }
+        body {
+            font-family: sans-serif;
+
             background-color: #f4f4f4;
         }
 
@@ -55,6 +63,16 @@
 
         h1, h2 {
             color: #343a40;
+        }
+        .navbar-light .navbar-nav .nav-link{
+            color: black;
+        }
+        .navbar-light .navbar-nav .nav-link:hover{
+            color: black;
+        }
+        .navbar{
+            position: fixed;
+            top: 0;
         }
     </style>
 </head>

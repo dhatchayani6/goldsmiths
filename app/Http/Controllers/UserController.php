@@ -36,13 +36,45 @@ class UserController extends Controller
         }
     }
 
-    public function show_jewe($id)
-    {
-        $jewel = Jewel::findOrFail($id);  // Find the jewel by ID or throw a 404 error
-        $jewel->jewel_image = asset($jewel->jewel_image);
+    // public function show_jewe($id)
+    // {
+    //     $jewel = Jewel::findOrFail($id);  // Find the jewel by ID or throw a 404 error
+    //     $jewel->jewel_image = asset($jewel->jewel_image);
 
-        return view('user.view', compact('jewel'));
+    //     return view('user.view', compact('jewel'));
+    // }
+
+    public function show_jewe($id)
+{
+    // Find the jewel by ID or throw a 404 error
+    $jewel = Jewel::findOrFail($id);
+
+    // Prepare the jewel image URL
+    $jewel->jewel_image = asset($jewel->jewel_image);
+
+    // Check if the request expects a JSON response
+    if (request()->wantsJson()) {
+        // Return the jewel data with a success message as a JSON response
+        return response()->json([
+            'success' => true,
+            'message' => 'Jewel retrieved successfully',
+            'data' => [
+                'id' => $jewel->id,
+                'name' => $jewel->name,
+                'description' => $jewel->description,
+                'price' => $jewel->price,
+                'jewel_image' => $jewel->jewel_image,
+                'created_at' => $jewel->created_at,
+                'updated_at' => $jewel->updated_at,
+            ]
+        ]);
     }
+
+    // Otherwise, return the view with jewel data
+    return view('user.view', compact('jewel'));
+}
+
+
 
     public function showJewelStatus($id)
     {
@@ -50,7 +82,7 @@ class UserController extends Controller
 
         // Fetch the jewel based on the jewel ID and the authenticated user ID
         $jewelle = JewelQuery::where('id', $id)->where('user_id', $userId)->firstOrFail();
-    
+
         // Pass the fetched jewel data to the view
         return view('user.status', compact('jewelle'));
     }
@@ -61,20 +93,22 @@ class UserController extends Controller
     //         ->where('id',w $userId);    
     //     return view('user.myqueries', compact('showcustomizationqueries'));
     // }
-    public function showcustomizationqueries() {
+    public function showcustomizationqueries()
+    {
         $showcustomizationqueries = Customqueries::all();
         return view('user.myqueries', compact('showcustomizationqueries'));
     }
 
-    public function getpurchase(){
+    public function getpurchase()
+    {
         $fetchpurchase = Purchase::all();
-        return view('smith.payment-status',compact('fetchpurchase')); 
+        return view('smith.payment-status', compact('fetchpurchase'));
     }
 
-    
-    
 
-    
+
+
+
 }
 
 

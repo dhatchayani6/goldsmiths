@@ -78,6 +78,7 @@ class LoginController extends Controller
                 'name' => 'required|string',
                 'email' => 'required|string|email|unique:users,email',
                 'password' => 'required|string|min:6',
+                'mobile_number'=>'required|integer|min:10'
             ]);
 
             // Create a new user instance
@@ -85,6 +86,7 @@ class LoginController extends Controller
             $register->name = $request->input('name');
             $register->email = $request->input('email');
             $register->password = Hash::make($request->input('password'));
+            $register->mobile_number=$request->input('mobile_number');
             $register->save();
 
             return response()->json(['sucess'=>true,'message' => 'Registered successfully','data'=>$register], 200);
