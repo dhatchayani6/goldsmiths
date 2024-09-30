@@ -34,6 +34,10 @@ Route::post('/register',[LoginController::class,'register']);
 //add jewelery part
 Route::post( '/jewel_store', action: [JewelController::class, 'store_jewel'])->name('jewel.store');
 
+// user part 
+Route::get('/fetch_jewel', action: [UserController::class, 'fetch_jewels'])->name('fetchjewel');
+
+
 //view click particlar jewel detail fetching here
 Route::get('/jewel/{id}', [UserController::class,'show_jewe'])->name('jewel.show');
 
@@ -49,4 +53,7 @@ Route::get('/customize-jewel/{id}', [UserQueriesController::class, 'create'])->n
 
 //to store the cutomize 
 Route::post('/customize_design',[UserQueriesController::class,'store_customize'])->name('store.customizedesign');
+
+
+Route::get('/userqueries/{id}',[UserController::class,'fetchUserQueries']);
 

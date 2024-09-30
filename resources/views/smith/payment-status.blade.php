@@ -75,16 +75,10 @@
 
         /* Footer Styling */
         footer {
-            background-color: #2c3e50;
-            color: #fff;
             text-align: center;
-            padding: 15px 0;
-            margin-top: 20px;
-        }
-
-        footer p {
-            margin: 0;
-            font-size: 14px;
+            padding: 10px;
+            background-color: #2c3e50;
+            color: white;
         }
 
         /* Responsive Design */
@@ -109,25 +103,11 @@
                             <h2>Transaction Details</h2>
                             <div class="transaction-info">
                                 <p><strong>User ID:</strong> {{ $purchase->user_id }}</p>
-                                <p><strong>Amount:</strong> ${{$purchase->total_price}}</p>
-                                </div>
+                                <p><strong>Amount:</strong> ${{ $purchase->total_price}}</p>
+                            </div>
                             <div class="status-info">
                                 <h3>Status: <span class="status-text {{ strtolower($purchase->status) }}">{{ ucfirst($purchase->status) }}</span></h3>
                             </div>
-                            <!-- Edit Status Form -->
-                            <form class="edit-form" data-id="{{ $purchase->id }}">
-                                @csrf
-                                <input type="hidden" name="id" value="{{ $purchase->id }}">
-                                <div class="form-group">
-                                    <label for="status" class="form-label">Update Status:</label>
-                                    <select class="form-select" name="status" required>
-                                        <option value="pending" {{ $purchase->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                        <option value="complete" {{ $purchase->status == 'complete' ? 'selected' : '' }}>Complete</option>
-                                        <option value="failed" {{ $purchase->status == 'failed' ? 'selected' : '' }}>Failed</option>
-                                    </select>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Update Status</button>
-                            </form>
                         </div>
                     </div>
                 @endforeach
@@ -135,7 +115,7 @@
         @else
             <p>No purchases found.</p>
         @endif
-    </section>
+    </section> 
 
     <!-- Footer -->
     <footer>
@@ -145,41 +125,6 @@
     <!-- JavaScript -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            // Handle status update form submission
-            $('.edit-form').on('submit', function (event) {
-                event.preventDefault(); // Prevent the default form submission
-
-                var form = $(this);
-                var formData = form.serialize();
-                var transactionId = form.data('id');
-
-                $.ajax({
-                    url: "{{ route('update.status') }}", // Ensure this matches the route defined in web.php
-                    type: "POST",
-                    data: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // CSRF token
-                    },
-                    success: function (response) {
-                        var statusText = form.closest('.status-card').find('.status-text');
-                        var newStatus = form.find('select[name="status"]').val();
-
-                        // Update status text and color
-                        statusText.text(newStatus.charAt(0).toUpperCase() + newStatus.slice(1)); // Update the text to the new status
-                        statusText.removeClass('pending complete failed'); // Remove previous status classes
-                        statusText.addClass(newStatus); // Add new status class
-
-                        alert('Status updated successfully!');
-                    },
-                    error: function (xhr) {
-                        alert('An error occurred while updating the status.');
-                    }
-                });
-            });
-        });
-    </script>
 </body>
 
 </html>

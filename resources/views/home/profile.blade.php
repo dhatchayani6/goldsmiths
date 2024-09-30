@@ -212,7 +212,7 @@
                 alt="Profile Picture" class="profile-pic" id="profilePic">
 
             <h1 id="username">{{ Auth::user()->name }}</h1>
-            <p id="bio">{{ Auth::user()->bio ?? 'No bio available.' }}</p>
+            <p id="bio">ID:{{ Auth::user()->id ?? 'No bio available.' }}</p>
             <p><strong>User Type:</strong> {{ Auth::user()->usertype }}</p>
 
             <button id="editButton">Edit Profile Picture</button>

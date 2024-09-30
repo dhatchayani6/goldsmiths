@@ -135,4 +135,7 @@ class UserQueriesController extends Controller
         return response()->json(['message' => 'Query not found.'], 404);
     }
 
+
+
+
 }

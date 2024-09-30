@@ -15,6 +15,9 @@
                 <a class="nav-link" href="{{route('show_customization_queries')}}">Customization Status</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="#">Query Status</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="{{route('chat')}}">Messages</a>
             </li>
 

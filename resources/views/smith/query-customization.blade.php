@@ -102,7 +102,7 @@
     @include('smith.navabr')
 
     <div class="container mt-5">
-        <h1>User Queries</h1>
+        <h1>Customize User Queries</h1>
         <table>
             <thead>
                 <tr>

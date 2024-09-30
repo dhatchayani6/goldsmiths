@@ -72,14 +72,17 @@
             font-weight: bold;
             border-radius: 0.5rem;
         }
-        .footer{
+
+        .footer {
             position: fixed;
             bottom: 0 !important;
         }
-        .navbar-light .navbar-nav .nav-link{
+
+        .navbar-light .navbar-nav .nav-link {
             color: black;
         }
-        .navbar-light .navbar-nav .nav-link:hover{
+
+        .navbar-light .navbar-nav .nav-link:hover {
             color: black;
         }
     </style>
@@ -108,11 +111,14 @@
                                 <div class="modal-body">
                                     <form id="purchase-form">
                                         @csrf
+
                                         <div class="mb-4">
                                             <label for="jewel_name">Jewel Name</label>
                                             <input type="text" class="form-control" id="jewel_name" name="jewel_name" value="{{ $jewels->name }}" readonly>
                                             <input type="hidden" name="jewel_id" value="{{ $jewels->id }}">
                                             <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+                                            <input type="hidden" name="amount" id="amount" value="{{ $jewels->price * 100 }}"> <!-- Amount in paise -->
+                                            <input type="hidden" name="payment_method" value="razorpay">
                                         </div>
 
                                         <div class="mb-4">
@@ -150,50 +156,7 @@
                                             <textarea class="form-control" id="address" name="address" required></textarea>
                                         </div>
 
-                                        <!-- Payment Method -->
-                                        <div class="form-group">
-                                            <label for="payment_method">Payment Method</label>
-                                            <select class="form-control" id="payment_method" name="payment_method" required>
-                                                <option value="">Select Payment Method</option>
-                                                <option value="card">Credit/Debit Card</option>
-                                                <option value="razorpay">Razorpay</option>
-                                                <option value="cash_on_delivery">Cash on Delivery</option>
-                                            </select>
-                                        </div>
-
-                                        <!-- Card Payment Fields -->
-                                        <div id="card-fields" style="display: none;">
-                                            <div class="form-row">
-                                                <div class="form-group col-md-6">
-                                                    <label for="card_name">Cardholder Name</label>
-                                                    <input type="text" class="form-control" id="card_name" name="card_name">
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label for="card_number">Card Number</label>
-                                                    <input type="text" class="form-control" id="card_number" name="card_number">
-                                                </div>
-                                            </div>
-                                            <div class="form-row">
-                                                <div class="form-group col-md-6">
-                                                    <label for="expiry_date">Expiry Date</label>
-                                                    <input type="text" class="form-control" id="expiry_date" name="expiry_date" placeholder="MM/YY">
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label for="cvv">CVV</label>
-                                                    <input type="text" class="form-control" id="cvv" name="cvv">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Razorpay Payment Fields -->
-                                        <div id="razorpay-fields" style="display: none;">
-                                            <div class="form-group">
-                                                <label for="razorpay_payment_id">Razorpay Payment ID</label>
-                                                <input type="text" class="form-control" id="razorpay_payment_id" name="razorpay_payment_id">
-                                            </div>
-                                        </div>
-
-                                        <button type="submit" class="btn btn-success w-100">Submit</button>
+                                        <button type="submit" class="btn btn-success w-100">Proceed to Payment</button>
                                     </form>
                                 </div>
                             </div>
@@ -209,11 +172,12 @@
             </div>
         </div>
     </div>
-<!-- footer -->
-@include('home.footer')
+
+    @include('home.footer')
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
         $(document).ready(function () {
             // Calculate total price based on quantity
@@ -223,37 +187,66 @@
                 $('#total_price').val(price * quantity);
             });
 
-            // Show/hide payment fields based on selected payment method
-            $('#payment_method').on('change', function () {
-                var method = $(this).val();
-                if (method === 'card') {
-                    $('#card-fields').show();
-                    $('#razorpay-fields').hide();
-                } else if (method === 'razorpay') {
-                    $('#razorpay-fields').show();
-                    $('#card-fields').hide();
-                } else {
-                    $('#card-fields, #razorpay-fields').hide();
-                }
-            });
-
             // Submit the purchase form
             $('#purchase-form').on('submit', function (e) {
                 e.preventDefault();
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('purchase.store') }}',
-                    data: $(this).serialize(),
-                    success: function (response) {
-                        $('#message-content').text(response.message);
-                        $('#response-message').removeClass('d-none').addClass('alert-success');
-                        $('#purchaseModal').modal('hide');
+
+                // Create Razorpay order
+                var amount = $('#amount').val(); // Amount in paise
+                var options = {
+                    key: "{{ env('RAZORPAY_KEY') }}", // Your Razorpay Key ID
+                    amount: amount,
+                    currency: "INR",
+                    name: "Your Company Name",
+                    description: "Purchase of Jewel",
+                    image: "/images/logo-icon.png",
+                    handler: function (response) {
+                        // On successful payment, handle the response and send the data to your backend
+                        $.ajax({
+                            type: 'POST',
+                            url: '{{ route('purchase.store') }}',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                jewel_id: $('input[name="jewel_id"]').val(),
+                                user_id: $('input[name="user_id"]').val(),
+                                quantity: $('#quantity').val(),
+                                customer_name: $('#customer_name').val(),
+                                email: $('#email').val(),
+                                mobile_number: $('#mobile_number').val(),
+                                zip_code: $('#zip_code').val(),
+                                address: $('#address').val(),
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                total_price: $('#total_price').val()
+                            },
+                            success: function (response) {
+                                $('#message-content').text(response.message);
+                                $('#response-message').removeClass('d-none').addClass('alert-success');
+                                $('#purchaseModal').modal('hide');
+
+                                // Reload the page after a short delay to show the success message
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 2000); // Adjust the time as needed
+                            },
+                            error: function (xhr) {
+                                $('#message-content').text(xhr.responseJSON.message || 'An error occurred.');
+                                $('#response-message').removeClass('d-none').addClass('alert-danger');
+                            }
+                        });
                     },
-                    error: function (xhr) {
-                        $('#message-content').text(xhr.responseJSON.message || 'An error occurred.');
-                        $('#response-message').removeClass('d-none').addClass('alert-danger');
+                    prefill: {
+                        name: $('#customer_name').val(),
+                        email: $('#email').val(),
+                        contact: $('#mobile_number').val()
+                    },
+                    theme: {
+                        color: "#28a745"
                     }
-                });
+                };
+
+                // Show the Razorpay payment interface
+                var rzp = new Razorpay(options);
+                rzp.open();
             });
         });
     </script>

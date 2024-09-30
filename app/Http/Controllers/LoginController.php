@@ -78,7 +78,7 @@ class LoginController extends Controller
                 'name' => 'required|string',
                 'email' => 'required|string|email|unique:users,email',
                 'password' => 'required|string|min:6',
-                'mobile_number'=>'required|integer|min:10'
+                'mobile_number'=>'nullable|integer|min:10'
             ]);
 
             // Create a new user instance

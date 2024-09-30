@@ -165,9 +165,7 @@
             transition: background-color 0.3s;
         }
 
-        footer:hover {
-            background-color: #0056b3;
-        }
+
 
         @media (max-width: 768px) {
             #contacts-list {
@@ -188,7 +186,8 @@
                 align-items: center;
             }
         }
-        li{
+
+        li {
             list-style-type: none;
         }
     </style>

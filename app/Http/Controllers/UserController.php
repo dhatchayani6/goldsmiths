@@ -9,6 +9,7 @@ use App\Models\Purchase;
 use Illuminate\Http\Request;
 use App\Models\Jewel;
 use Auth;
+use App\Models\UserQueries;
 
 
 
@@ -105,7 +106,20 @@ class UserController extends Controller
         return view('smith.payment-status', compact('fetchpurchase'));
     }
 
+    public function fetchUserQueries($id)
+{
+    // Fetch queries based on user_id
+    $userQueries = UserQueries::where('user_id', $id)->get();
 
+    // If you want to fetch queries for the authenticated user, use:
+    // $userQueries = UserQueries::where('user_id', auth()->id())->get();
+
+    if ($userQueries->isEmpty()) {
+        return response()->json(['message' => 'No queries found for the user.'], 404);
+    }
+
+    return response()->json(['data' => $userQueries], 200);
+}
 
 
 

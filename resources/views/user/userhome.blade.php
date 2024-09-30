@@ -14,9 +14,9 @@
             margin: 0;
             font-family: sans-serif;
         }
+
         body {
             font-family: sans-serif;
-
             background-color: #f4f4f4;
         }
 
@@ -25,7 +25,11 @@
             border-radius: 12px;
             overflow: hidden;
             display: flex;
-            flex-direction: column; /* Ensure contents are stacked */
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+    max-width: 550px; /* Adjust this value for extra width */
+    min-height: 450px;
         }
 
         .card:hover {
@@ -35,21 +39,41 @@
         }
 
         .card-img-top {
-            height: 210px;
+            height: 200px;
             object-fit: cover;
         }
 
         .card-body {
             text-align: center;
-            flex-grow: 1; /* Allow card body to grow */
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .card-title {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             color: #333;
         }
 
-            
+        .card-text {
+            flex-grow: 1;
+        }
+
+        .card-footer {
+            margin-top: auto;
+        }
+
+        .col-md-4 {
+            display: flex;
+            justify-content: center;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 300px;
+            min-height: 450px;
+        }
 
         #notification-icon {
             position: relative;
@@ -61,18 +85,26 @@
             right: -10px;
         }
 
-        h1, h2 {
+        h1,
+        h2 {
             color: #343a40;
         }
-        .navbar-light .navbar-nav .nav-link{
+
+        .navbar-light .navbar-nav .nav-link {
             color: black;
         }
-        .navbar-light .navbar-nav .nav-link:hover{
+
+        .navbar-light .navbar-nav .nav-link:hover {
             color: black;
         }
-        .navbar{
-            position: fixed;
-            top: 0;
+
+        .footer {
+            /* position: fixed; */
+            bottom: 0;
+            width: 100%;
+        }
+        .col-md-3{
+            padding-bottom: 30px;
         }
     </style>
 </head>
@@ -106,23 +138,24 @@
                     if (response.success && Array.isArray(response.data)) {
                         response.data.forEach(function (jewel) {
                             $('#jewel-container').append(`
-                                <div class="col-md-4">
-                                    <div class="card mb-4">
-                                        <img src="${jewel.jewel_image}" class="card-img-top" alt="${jewel.name}">
-                                        <div class="card-body">
-                                            <h5 class="card-title">${jewel.name}</h5>
-                                            <p class="card-text">${jewel.description}</p>
-                                            <p class="card-text"><strong>Price: $${jewel.price}</strong></p>
-                                            <a href="/jewel/${jewel.id}" class="btn btn-primary">VIEW</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            `);
+                <div class="col-md-3"> <!-- Change col-md-4 to col-md-3 -->
+                    <div class="card mb-4">
+                        <img src="${jewel.jewel_image}" class="card-img-top" alt="${jewel.name}">
+                        <div class="card-body">
+                            <h5 class="card-title">${jewel.name}</h5>
+                            <p class="card-text">${jewel.description}</p>
+                            <p class="card-text"><strong>Price: $${jewel.price}</strong></p>
+                            <a href="/jewel/${jewel.id}" class="btn btn-primary">VIEW</a>
+                        </div>
+                    </div>
+                </div>
+            `);
                         });
                     } else {
                         console.error('Error: response.data is not an array or response.success is false');
                     }
                 },
+
                 error: function (xhr, status, error) {
                     console.error('AJAX Error: ', status, error);
                 }
