@@ -5,12 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Page</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link href="=" https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href=" https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
 
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: sans-serif;
             background-color: #f0f0f0;
             margin: 0;
             display: flex;
@@ -148,36 +148,35 @@
                 opacity: 1;
             }
         }
+
         .navbar-custom {
-    background-color: #ffcc00;
-    padding: 10px 20px;
-  }
+            background-color: #ffcc00;
+            padding: 10px 20px;
+        }
 
-  .navbar-custom .navbar-brand {
-    color: #ffff;
-    font-weight: bold;
-    font-size: 24px;
-    font-family: 'Poppins', sans-serif;
-  }
+        .navbar-custom .navbar-brand {
+            color: #ffff;
+            font-weight: bold;
+            font-size: 24px;
+            font-family: 'Poppins', sans-serif;
+        }
 
-  .navbar-custom .nav-link {
-    color: #ffffff;
-    font-size: 18px;
-    margin-right: 15px;
-    transition: color 0.3s ease;
-  }
+        .navbar-custom .nav-link {
+            color: #ffffff;
+            font-size: 18px;
+            margin-right: 15px;
+            transition: color 0.3s ease;
+        }
 
-  .navbar-custom .nav-link:hover {
-    color: #000000;
-    text-decoration: underline;
-  }
+        .navbar-custom .nav-link:hover {
+            color: #000000;
+            text-decoration: underline;
+        }
 
-  /* Mobile View Styling */
-  .navbar-toggler-icon {
-    background-color: #ffffff;
-  }
-
-  
+        /* Mobile View Styling */
+        .navbar-toggler-icon {
+            background-color: #ffffff;
+        }
     </style>
 </head>
 
@@ -190,18 +189,24 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav ms-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Services</a>
                 </li>
                
+
                 @if (Auth::check())
-                    <li class="nav-item">
-                        <form method="post" action="{{ route('logout') }}" class="nav-link">
-                            @csrf
-                            <button class="btn btn-outline-danger my-2 my-sm-0">LOGOUT ({{ Auth::user()->name }})</button>
-                        </form>
-                    </li>
+                    <form class="form-inline" method="post" action="{{ route('logout') }}">
+                        @csrf
+                        <button class="btn btn-outline-danger my-2 my-sm-0 d-none">LOGOUT
+                            ({{ Auth::user()->name }})</button>
+                    </form>
                 @endif
             </ul>
         </div>

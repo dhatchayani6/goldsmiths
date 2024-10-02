@@ -40,7 +40,7 @@
             align-items: flex-start;
             /* Align items to the start */
             margin: auto;
-            flex: 1;
+            flex: 0;
             max-width: 1200px;
             /* Optional: Limit the maximum width */
             padding: 20px;
@@ -202,7 +202,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
                     </li>

@@ -11,7 +11,7 @@
 
     <style>
         body {
-            background-color: #f7f7f7;
+            background-color: #f7f7f7;05
         }
 
         .table-container {
@@ -49,21 +49,29 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Message</th>
+                        <th>Status</th>
                         <th>Submitted On</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($queries as $query)
-                        <tr>
+                        <tr id="query-{{ $query->id }}">
                             <td>{{ $query->user ? $query->user->name : 'Unknown User' }}</td>
                             <td>{{ $query->user ? $query->user->email : 'No Email' }}</td>
                             <td>{{ $query->message }}</td>
+                            <td class="status">{{ $query->status }}</td>
                             <td>{{ $query->created_at->format('d M Y, H:i') }}</td>
                             <td>
                                 <div class="btn-group">
-                                    <button class="btn btn-success btn-accept" data-id="{{ $query->id }}">Accept</button>
-                                    <button class="btn btn-danger btn-reject" data-id="{{ $query->id }}">Reject</button>
+                                    @if($query->status === 'Accepted')
+                                        <button class="btn btn-success" disabled>Accepted</button>
+                                    @elseif($query->status === 'Rejected')
+                                        <button class="btn btn-danger" disabled>Rejected</button>
+                                    @else
+                                        <button class="btn btn-success btn-accept" data-id="{{ $query->id }}">Accept</button>
+                                        <button class="btn btn-danger btn-reject" data-id="{{ $query->id }}">Reject</button>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -91,7 +99,8 @@
                     success: function(response) {
                         if (response.success) {
                             alert('Query accepted successfully.');
-                            location.reload(); // Refresh the page to reflect changes
+                            $('#query-' + id + ' .btn-group').html('<button class="btn btn-success" disabled>Accepted</button>');
+                            $('#query-' + id + ' .status').text('Accepted');
                         }
                     },
                     error: function() {
@@ -112,7 +121,8 @@
                     success: function(response) {
                         if (response.success) {
                             alert('Query rejected successfully.');
-                            location.reload(); // Refresh the page to reflect changes
+                            $('#query-' + id + ' .btn-group').html('<button class="btn btn-danger" disabled>Rejected</button>');
+                            $('#query-' + id + ' .status').text('Rejected');
                         }
                     },
                     error: function() {

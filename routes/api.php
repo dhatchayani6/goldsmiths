@@ -8,7 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\UserQueriesController;
 use App\Http\Controllers\JewelQueryController;
-use App\Http\Controllers\CustomqueriesController;
+use App\Http\Controllers\ChatController;
 
 
 
@@ -55,5 +55,27 @@ Route::get('/customize-jewel/{id}', [UserQueriesController::class, 'create'])->n
 Route::post('/customize_design',[UserQueriesController::class,'store_customize'])->name('store.customizedesign');
 
 
-Route::get('/userqueries/{id}',[UserController::class,'fetchUserQueries']);
+Route::get('/userqueries/{id}', [UserController::class, 'fetchUserQueries'])->name('fetchuserqueries');
+
+//to get th eimage in smith side
+Route::get('/manage_jewels',[JewelController::class,'manage']);
+
+
+// Show edit form for a specific jewel
+Route::get('/jewel/edit/{id}', [JewelController::class, 'edit']);
+
+// Update a specific jewel
+Route::post('/jewel/update/{id}', [JewelController::class, 'update']);
+
+// Delete a specific jewel
+Route::delete('/jewel/delete/{id}', [JewelController::class, 'destroy']);
+//jewel statsu
+
+Route::get('/jewel/status', [UserController::class, 'showJewelStatus'])->name('jewel.status');
+
+
+Route::get('/get_purchase',[PurchaseController::class,'getpurchase'])->name('get_purchases');
+
+
+Route::get('/fetch-contacts', [ChatController::class, 'fetchContacts'])->name('fetch.contacts');
 

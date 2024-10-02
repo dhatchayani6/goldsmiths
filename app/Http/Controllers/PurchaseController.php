@@ -17,59 +17,70 @@ class PurchaseController extends Controller
 
 
     public function storepurchasedetails(Request $request)
-{
-    // Set default payment method to 'razorpay'
-    $request->merge(['payment_method' => 'razorpay']);
-
-    // Validation rules
-    $validator = Validator::make($request->all(), [
-        'jewel_id' => 'required|integer|exists:jewels,id',
-        'amount' => 'nullable|integer|exists:jewels,price',
-        'customer_name' => 'required|string|max:255',
-        'email' => 'required|email',
-        'mobile_number' => 'required|string|max:15',
-        'zip_code' => 'required|string|max:10',
-        'address' => 'required|string',
-        'payment_method' => 'required|string|in:razorpay',
-        'size' => 'nullable|string|max:255',
-        'quantity' => 'nullable|integer|min:1',
-        'total_price' => 'required|numeric',
-        'razorpay_payment_id' => 'required|string|max:255',
-        'user_id' => 'required|integer|exists:users,id',
-    ]);
-
-    // Handle validation errors
-    if ($validator->fails()) {
-        return response()->json(['errors' => $validator->errors()], 422);
+    {
+        // Set default payment method to 'razorpay'
+        $request->merge(['payment_method' => 'razorpay']);
+    
+        // Validation rules
+        $validator = Validator::make($request->all(), [
+            'jewel_id' => 'required|integer|exists:jewels,id',
+            'amount' => 'nullable|integer|exists:jewels,price',
+            'customer_name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'mobile_number' => 'required|string|max:15',
+            'zip_code' => 'required|string|max:10',
+            'address' => 'required|string',
+            'payment_method' => 'required|string|in:razorpay',
+            'size' => 'nullable|string|max:255',
+            'quantity' => 'nullable|integer|min:1',
+            'total_price' => 'required|numeric',
+            'razorpay_payment_id' => 'required|string|max:255',
+            'user_id' => 'required|integer|exists:users,id',
+        ]);
+    
+        // Handle validation errors
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+    
+        // Create a new Purchase record
+        $purchase = new Purchase();
+        $purchase->jewel_id = $request->input('jewel_id');
+        $purchase->amount = $request->input('amount');
+        $purchase->total_price = $request->input('total_price');
+        $purchase->customer_name = $request->input('customer_name');
+        $purchase->size = $request->input('size');
+        $purchase->quantity = $request->input('quantity');
+        $purchase->email = $request->input('email');
+        $purchase->mobile_number = $request->input('mobile_number');
+        $purchase->zip_code = $request->input('zip_code');
+        $purchase->address = $request->input('address');
+        $purchase->payment_method = $request->input('payment_method');
+        $purchase->user_id = $request->input('user_id');
+        $purchase->razorpay_payment_id = $request->input('razorpay_payment_id');
+        $purchase->status = 'success'; // Update status to success
+    
+        // Save the Purchase record
+        $purchase->save();
+    
+        // Update the corresponding Customqueries record
+        $customQuery = Customqueries::where('user_id', $request->input('user_id'))
+            ->where('jewel_id', $request->input('jewel_id'))
+            ->first();
+    
+        if ($customQuery) {
+            $customQuery->status = 'success'; // Update the status
+            $customQuery->save(); // Save the changes
+        }
+    
+        // Return a success response with the purchase data
+        return response()->json([
+            'success' => true,
+            'message' => 'Purchase completed successfully!',
+            'data' => $purchase
+        ], 200);
     }
-
-    // Create a new Purchase record
-    $purchase = new Purchase();
-    $purchase->jewel_id = $request->input('jewel_id');
-    $purchase->amount = $request->input('amount');
-    $purchase->total_price = $request->input('total_price');
-    $purchase->customer_name = $request->input('customer_name');
-    $purchase->size = $request->input('size');
-    $purchase->quantity = $request->input('quantity');
-    $purchase->email = $request->input('email');
-    $purchase->mobile_number = $request->input('mobile_number');
-    $purchase->zip_code = $request->input('zip_code');
-    $purchase->address = $request->input('address');
-    $purchase->payment_method = $request->input('payment_method');
-    $purchase->user_id = $request->input('user_id');
-    $purchase->razorpay_payment_id = $request->input('razorpay_payment_id');
-    $purchase->status = 'success'; // Update status to success
-
-    // Save the Purchase record
-    $purchase->save();
-
-    // Return a success response with the purchase data
-    return response()->json([
-        'success' => true,
-        'message' => 'Purchase completed successfully!',
-        'data' => $purchase
-    ], 200);
-}
+    
 
 
 
@@ -80,32 +91,6 @@ class PurchaseController extends Controller
     }
 
 
-    public function updateStatus(Request $request)
-    {
-        // Validate the incoming request
-        $request->validate([
-            'status' => 'required|in:pending,complete,failed',
-            'id' => 'required|integer|exists:purchases,id'
-        ]);
-
-        // Find the purchase by ID
-        $purchase = Purchase::find($request->input('id'));
-
-        if ($purchase) {
-            // Update the status in the purchases table
-            $purchase->status = $request->input('status');
-            $purchase->save();
-
-            // Update the status in the custom queries table based on jewel_id and user_id
-            Customqueries::where('jewel_id', $purchase->jewel_id)
-                ->where('user_id', $purchase->user_id)
-                ->update(['status' => $purchase->status]);
-
-            return response()->json(['message' => 'Status updated successfully!']);
-        }
-
-        return response()->json(['message' => 'Purchase not found.'], 404);
-    }
 
 
     public function getcustomize()
@@ -149,9 +134,21 @@ class PurchaseController extends Controller
 
 
 
-    public function getpurchase()
-    {
-        $fetchpurchase = Purchase::all();
-        return view('smith.payment-status', compact('fetchpurchase'));
+    public function getpurchase(Request $request)
+{
+    $fetchpurchase = Purchase::all(); // Fetch all purchases
+
+    // Check if the request is AJAX
+    if ($request->ajax()) {
+        return response()->json([
+            'success' => true,
+            'message' => 'Payment fetched successfully',
+            'data' => $fetchpurchase
+        ]);
     }
+
+    // If not an AJAX request, return a view (if needed)
+    return view('smith.payment-status', compact('fetchpurchase'));
+}
+
 }

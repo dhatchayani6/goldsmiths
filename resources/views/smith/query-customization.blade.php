@@ -36,7 +36,8 @@
             margin-top: 20px;
         }
 
-        th, td {
+        th,
+        td {
             padding: 15px;
             border: 1px solid #ddd;
             text-align: left;
@@ -90,7 +91,8 @@
                 font-size: 24px;
             }
 
-            th, td {
+            th,
+            td {
                 padding: 10px;
                 font-size: 14px;
             }
@@ -118,39 +120,37 @@
             </thead>
             <tbody>
                 @foreach($userQueries as $query)
-                    <tr data-query-id="{{ $query->id }}">
-                        <td>{{ $query->id }}</td>
-                        <td>{{ $query->query }}</td>
-                        <td>{{ $query->user_id }}</td>
-                        <td>
-                            <img src="{{ $query->image_url }}" alt="User Image" class="user-image">
-                        </td>
-                        <td>
-                            @if($query->jewel && $query->jewel->image_url)
-                                <img src="{{ asset('storage/' . $query->jewel->image_url) }}" alt="{{ $query->jewel->name }}" class="jewel-image img-thumbnail">
-                            @else
-                                <p>No Jewel Image</p>
-                            @endif
-                        </td>
-                        <td>
-                            <button class="btn btn-success accept-btn">Accept</button>
-                            <button class="btn btn-danger reject-btn">Reject</button>
-                        </td>
-                        <td>{{ $query->status }}</td>
-                        <td>
-                            @if($query->status === 'accepted')
-                                <button class="btn btn-primary customize-btn" 
-                                        data-query-id="{{ $query->id }}" 
-                                        data-product-id="{{ $query->jewel_id }}" 
-                                        data-product-image="{{ $query->image_url }}"
-                                        data-jewel-id="{{ $query->jewel_id }}" 
-                                        data-user-id="{{ $query->user_id }}" 
-                                        data-customer-name="{{ $query->customer_name }}" 
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#customizePaymentModal">Customize Payment</button>
-                            @endif
-                        </td>
-                    </tr>
+                <tr data-query-id="{{ $query->id }}">
+                    <td>{{ $query->id }}</td>
+                    <td>{{ $query->query }}</td>
+                    <td>{{ $query->user_id }}</td>
+                    <td>
+                        <img src="{{ $query->image_url }}" alt="User Image" class="user-image">
+                    </td>
+                    <td>
+                        @if($query->jewel && $query->jewel->image_url)
+                        <img src="{{ asset('storage/' . $query->jewel->image_url) }}" alt="{{ $query->jewel->name }}" class="jewel-image img-thumbnail">
+                        @else
+                        <p>No Jewel Image</p>
+                        @endif
+                    </td>
+                    <td>
+                        @if($query->status === 'pending')
+                        <button class="btn accept-btn">Accept</button>
+                        <button class="btn reject-btn">Reject</button>
+                        @elseif($query->status === 'accepted')
+                        <button class="btn accept-btn" disabled>Accepted</button>
+                        @else
+                        <button class="btn reject-btn" disabled>Rejected</button>
+                        @endif
+                    </td>
+                    <td>{{ $query->status }}</td>
+                    <td>
+                        @if($query->status === 'accepted')
+                        <button class="btn btn-primary customize-btn" data-query-id="{{ $query->id }}" data-product-id="{{ $query->jewel_id }}" data-product-image="{{ $query->image_url }}" data-jewel-id="{{ $query->jewel_id }}" data-user-id="{{ $query->user_id }}" data-customer-name="{{ $query->customer_name }}" data-bs-toggle="modal" data-bs-target="#customizePaymentModal">Customize Payment</button>
+                        @endif
+                    </td>
+                </tr>
                 @endforeach
             </tbody>
         </table>
@@ -166,7 +166,7 @@
                 </div>
                 <div class="modal-body">
                     <form id="customizePaymentForm">
-                        @csrf 
+                        @csrf
                         <input type="hidden" name="jewel_id" id="jewel_id" value="">
                         <input type="hidden" name="user_id" id="user_id" value="">
 
@@ -215,92 +215,95 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-    $(document).ready(function () {
-        // Set up AJAX with CSRF token
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        // Accept button click event
-        $('.accept-btn').click(function () {
-            var row = $(this).closest('tr');
-            var queryId = row.data('query-id');
-
-            $.ajax({
-                url: '/query/accept/' + queryId, // Ensure this route is correct
-                type: 'POST',
-                success: function (response) {
-                    alert('Query accepted successfully!');
-                    location.reload(); // Reload to reflect changes
-                },
-                error: function (error) {
-                    alert('Error accepting query.');
+        $(document).ready(function() {
+            // Set up AJAX with CSRF token
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-        });
 
-        // Reject button click event
-        $('.reject-btn').click(function () {
-            var row = $(this).closest('tr');
-            var queryId = row.data('query-id');
+            // Accept button click event
+            $('.accept-btn').click(function() {
+                var row = $(this).closest('tr');
+                var queryId = row.data('query-id');
+                var button = $(this);
 
-            $.ajax({
-                url: '/query/reject/' + queryId, // Ensure this route is correct
-                type: 'POST',
-                success: function (response) {
-                    alert('Query rejected successfully!');
-                    location.reload(); // Reload to reflect changes
-                },
-                error: function (error) {
-                    alert('Error rejecting query.');
-                }
-            });
-        });
-
-        // Show modal with query ID and product details
-        $('.customize-btn').click(function () {
-            var queryId = $(this).data('query-id');
-            var productName = $(this).data('customer-name');
-            var productId = $(this).data('product-id');
-            var productImage = $(this).data('product-image');
-            var jewelId = $(this).data('jewel-id');
-            var userId = $(this).data('user-id');
-            var customerName = $(this).data('customer-name');
-
-            // Populate the form fields in the modal
-            $('#product_id').val(productId);
-            $('#product_name').val(productName);
-            $('#product_image').attr('src', productImage);
-            $('#jewel_id').val(jewelId);
-            $('#user_id').val(userId);
-            $('#customer_name').val(customerName);
-        });
-
-        // Submit customize payment form
-        $('#customizePaymentForm').submit(function (e) {
-            e.preventDefault();
-            var formData = $(this).serialize();
-            $.ajax({
-                url: '/query/customize-payment', // Ensure this route is correct
-                type: 'POST',
-                data: formData,
-                success: function (response) {
-                    alert('Payment customized successfully!');
-                    $('#customizePaymentModal').modal('hide');
-                    location.reload(); // Reload the page or update the table as needed
-                },
-                error: function (error) {
-                    if (error.responseJSON && error.responseJSON.message) {
-                        alert('Error: ' + error.responseJSON.message);
-                    } else {
-                        alert('An unexpected error occurred. Please try again.');
+                $.ajax({
+                    type: 'POST',
+                    url: '/query/accept/' + queryId,
+                    success: function(response) {
+                        button.prop('disabled', true).text('Accepted');
+                        row.find('.reject-btn').prop('disabled', true);
+                        row.find('td:last').html('<button class="btn btn-primary customize-btn" data-query-id="' + queryId + '" data-product-id="' + response.jewel_id + '" data-product-image="' + response.image_url + '" data-jewel-id="' + response.jewel_id + '" data-user-id="' + response.user_id + '" data-customer-name="' + response.customer_name + '" data-bs-toggle="modal" data-bs-target="#customizePaymentModal">Customize Payment</button>');
+                        row.find('td:nth-last-child(2)').text('Accepted');
+                    },
+                    error: function(xhr) {
+                        alert('Error accepting query.');
                     }
-                }
+                });
+            });
+
+            // Reject button click event
+            $('.reject-btn').click(function() {
+                var row = $(this).closest('tr');
+                var queryId = row.data('query-id');
+                var button = $(this);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/query/reject/' + queryId,
+                    success: function() {
+                        button.prop('disabled', true).text('Rejected');
+                        row.find('.accept-btn').prop('disabled', true);
+                        row.find('td:last').text('Rejected');
+                    },
+                    error: function(xhr) {
+                        alert('Error rejecting query.');
+                    }
+                });
+            });
+
+            // Open customize payment modal
+            $('.customize-btn').click(function() {
+                var queryId = $(this).data('query-id');
+                var productId = $(this).data('product-id');
+                var productImage = $(this).data('product-image');
+                var jewelId = $(this).data('jewel-id');
+                var userId = $(this).data('user-id');
+                var customerName = $(this).data('customer-name');
+
+                $('#jewel_id').val(jewelId);
+                $('#user_id').val(userId);
+                $('#product_id').val(productId);
+                $('#product_name').val($(this).text());
+                $('#product_image').attr('src', productImage);
+
+                // Reset form fields
+                $('#size').val('');
+                $('#quantity').val('');
+                $('#amount').val('');
+                $('#mobile_number').val('');
+                $('#customer_name').val(customerName);
+            });
+
+            // Handle form submission
+            $('#customizePaymentForm').on('submit', function(e) {
+                e.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: '/query/customize-payment',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        alert('Payment customized successfully.');
+                        $('#customizePaymentModal').modal('hide');
+                    },
+                    error: function(xhr) {
+                        alert('Error customizing payment.');
+                    }
+                });
             });
         });
-    });
     </script>
 </body>
 

@@ -27,6 +27,22 @@ public function chat()
     return view('home.chat', compact('users', 'loggedInUser'));
 }
 
+public function fetchContacts(Request $request)
+{
+    $loggedInUser = Auth::user();
+    
+    $users = User::all(); // or apply your logic to fetch users
+
+    $contacts = $users->filter(function($user) use ($loggedInUser) {
+        return ($loggedInUser->usertype === 'admin' && $user->usertype !== 'admin') ||
+               ($loggedInUser->usertype !== 'admin' && $user->usertype === 'admin');
+    });
+
+    return response()->json([
+        'success' => true,
+        'data' => $contacts,
+    ]);
+}
 
 
 }

@@ -14,6 +14,7 @@
             flex-direction: column;
             min-height: 100vh;
         }
+
         .jewel-container {
             background: #fff;
             border-radius: 8px;
@@ -21,21 +22,25 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
+
         .jewel-image {
             border-radius: 8px;
         }
+
         .section-title {
             margin-top: 30px;
             font-size: 1.5rem;
             font-weight: bold;
             color: #333;
         }
+
         .query-card {
             background: #f1f1f1;
             border-radius: 8px;
             padding: 15px;
             margin-top: 10px;
         }
+
         .query-item {
             border: 1px solid #dee2e6;
             border-radius: 8px;
@@ -43,30 +48,36 @@
             margin-bottom: 10px;
             background-color: #fff;
         }
+
         .btn-purchase {
             width: 100%;
         }
+
         .query-name {
             font-weight: bold;
             color: #007bff;
         }
-        .navbar-light .navbar-nav .nav-link{
+
+        .navbar-light .navbar-nav .nav-link {
             color: black;
         }
-        .navbar-light .navbar-nav .nav-link:hover{
-            color: black;
+
+        .navbar-light .navbar-nav .nav-link:hover {
+            color: #0056b3; /* Darker color on hover */
         }
-        .btn-purchasenavbar-brand{
-            color: black;
-        }
-        .navbar-brand{
+
+        .navbar-brand {
             color: black !important;
+        }
+
+        .navbar {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 
 <body>
-@include('user.navbar')
+    @include('user.navbar')
 
     <div class="container flex-grow-1 mt-5">
         <div class="row justify-content-center">
@@ -79,8 +90,8 @@
                         <h1 class="jewel-name">{{ $jewel->name }}</h1>
                         <p class="jewel-description">{{ $jewel->description }}</p>
                         <p class="jewel-price">Price: ${{ $jewel->price }}</p>
-                        <a href="{{ url('purchasepageshow', ['id' => $jewel->id]) }}" class="btn btn-success">Purchase</a>
-                        <button class="btn btn-primary">
+                        <a href="{{ url('purchasepageshow', ['id' => $jewel->id]) }}" class="btn btn-success" id="purchaseButton">Purchase</a>
+                        <button class="btn btn-primary" id="customizeButton">
                             <a href="{{ route('customize.jewel', ['id' => $jewel]) }}" style="color: white; text-decoration: none;">Customize</a>
                         </button>
                     </div>
@@ -112,10 +123,9 @@
 
             <!-- Queries List -->
             <div id="queriesList" class="col-lg-8 mt-4"></div>
-
         </div>
     </div>
-    
+
     @include('home.footer')
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
@@ -172,6 +182,15 @@
 
             // Initially fetch and display queries
             fetchQueries();
+
+            // Button click events
+            $('#purchaseButton').on('click', function () {
+                $('#customizeButton').hide(); // Hide customize button
+            });
+
+            $('#customizeButton').on('click', function () {
+                $('#purchaseButton').hide(); // Hide purchase button
+            });
         });
     </script>
 </body>

@@ -7,8 +7,8 @@
     <title>Goldsmith Admin Dashboard</title>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
 
@@ -32,7 +32,7 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             background-color: white;
-            flex: 1; /* Allow content to grow and fill space */
+            flex: 1;
         }
 
         h1 {
@@ -49,6 +49,10 @@
             border: 1px solid #ddd;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 200px; /* Fixed height for uniformity */
         }
 
         .card:hover {
@@ -57,9 +61,9 @@
         }
 
         .card-icon {
-            font-size: 50px; /* Adjust icon size */
-            color: #007bff; /* Icon color */
-            margin-top: 20px;
+            font-size: 50px;
+            color: #007bff;
+            margin-top: 10px;
         }
 
         .card-title {
@@ -86,16 +90,23 @@
             margin-top: 20px;
         }
 
+        .row {
+            display: flex; /* Ensure the row is a flex container */
+        }
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .card {
+                height: auto; /* Allow cards to resize on smaller screens */
                 margin-bottom: 20px;
             }
         }
-        .navbar-light .navbar-nav .nav-link{
+
+        .navbar-light .navbar-nav .nav-link {
             color: black;
         }
-        .navbar-light .navbar-nav .nav-link:hover{
+
+        .navbar-light .navbar-nav .nav-link:hover {
             color: black;
         }
     </style>
@@ -111,7 +122,7 @@
             <p>Manage jewelry, inventory, and orders from the cards below.</p>
 
             <div class="row mt-4">
-                <div class="col-md-3 mb-4">
+                <div class="col-md-3 mb-4 d-flex">
                     <div class="card" onclick="window.location='{{ route('showstorejewellery') }}'">
                         <i class="ri-add-circle-line card-icon"></i>
                         <div class="card-body">
@@ -120,7 +131,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-4">
+                <div class="col-md-3 mb-4 d-flex">
                     <div class="card" onclick="window.location='{{ route('jewel.queries') }}'">
                         <i class="ri-questionnaire-line card-icon"></i>
                         <div class="card-body">
@@ -129,7 +140,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-4">
+                <div class="col-md-3 mb-4 d-flex">
                     <div class="card" onclick="window.location='{{ route('getcustomqueries') }}'">
                         <i class="ri-pencil-line card-icon"></i>
                         <div class="card-body">
@@ -138,12 +149,21 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-4">
+                <div class="col-md-3 mb-4 d-flex">
                     <div class="card" onclick="window.location='{{ route('get_purchases') }}'">
                         <i class="ri-money-dollar-circle-line card-icon"></i>
                         <div class="card-body">
                             <h5 class="card-title">Payment Status</h5>
                             <p class="card-text">Handle queries for payment status.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4 d-flex">
+                    <div class="card" onclick="window.location='{{ route('managejewels') }}'">
+                        <i class="ri-money-dollar-circle-line card-icon"></i>
+                        <div class="card-body">
+                            <h5 class="card-title">Manage Jewels</h5>
+                            <p class="card-text">Manage your jewelry inventory products</p>
                         </div>
                     </div>
                 </div>

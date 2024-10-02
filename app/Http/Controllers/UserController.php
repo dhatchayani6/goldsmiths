@@ -15,27 +15,28 @@ use App\Models\UserQueries;
 
 class UserController extends Controller
 {
-    public function fetch_jewels()
-    {
-        try {
-            // Fetch all jewels from the database
-            $jewels = Jewel::all();
+    public function fetch_jewels(Request $request)
+{
+    try {
+        // Fetch paginated jewels from the database
+        $jewels = Jewel::paginate(4);
 
-            // Return JSON response with success message and data
-            return response()->json([
-                'success' => true,
-                'message' => 'Jewels fetched successfully',
-                'data' => $jewels
-            ]);
-        } catch (\Exception $e) {
-            // Return JSON response with error message
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to fetch jewels',
-                'error' => $e->getMessage()
-            ], 500); // HTTP 500 Internal Server Error
-        }
+        // Return JSON response with success message and data
+        return response()->json([
+            'success' => true,
+            'message' => 'Jewels fetched successfully',
+            'data' => $jewels->items(), // Return only the items
+            'links' => $jewels->links()->toHtml(), // Return pagination links as HTML
+        ]);
+    } catch (\Exception $e) {
+        // Return JSON response with error message
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to fetch jewels',
+            'error' => $e->getMessage()
+        ], 500); // HTTP 500 Internal Server Error
     }
+}
 
     // public function show_jewe($id)
     // {
@@ -72,7 +73,12 @@ class UserController extends Controller
     }
 
     // Otherwise, return the view with jewel data
-    return view('user.view', compact('jewel'));
+    // return view('user.view', compact('jewel'));
+    return response()->json([
+        'success' => true,
+        'message' => 'Jewel retrived successfully',
+        'data' => $jewel
+    ]);
 }
 
 
@@ -95,10 +101,13 @@ class UserController extends Controller
     //     return view('user.myqueries', compact('showcustomizationqueries'));
     // }
     public function showcustomizationqueries()
-    {
-        $showcustomizationqueries = Customqueries::all();
-        return view('user.myqueries', compact('showcustomizationqueries'));
-    }
+{
+    // Fetch customization queries for the authenticated user
+    $showcustomizationqueries = Customqueries::where('user_id', auth()->id())->get();
+
+    return view('user.myqueries', compact('showcustomizationqueries'));
+}
+
 
     public function getpurchase()
     {
@@ -106,20 +115,17 @@ class UserController extends Controller
         return view('smith.payment-status', compact('fetchpurchase'));
     }
 
-    public function fetchUserQueries($id)
+    public function fetchUserQueries()
 {
-    // Fetch queries based on user_id
-    $userQueries = UserQueries::where('user_id', $id)->get();
+    // Fetch queries based on the authenticated user's ID
+    $userQueries = JewelQuery::where('user_id', auth()->id())->get();
 
-    // If you want to fetch queries for the authenticated user, use:
-    // $userQueries = UserQueries::where('user_id', auth()->id())->get();
-
-    if ($userQueries->isEmpty()) {
-        return response()->json(['message' => 'No queries found for the user.'], 404);
-    }
-
-    return response()->json(['data' => $userQueries], 200);
+    // Return the view with the user's queries
+    return view('user.query', compact('userQueries')); // Change 'your-view-name' to your actual view name
 }
+
+
+    
 
 
 

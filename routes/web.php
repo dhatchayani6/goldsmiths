@@ -90,8 +90,21 @@ Route::post('/profile', [ProfileController::class, 'update'])->name('profile.upd
 
 //chat part
 Route::get('/chat', [ChatController::class, 'chat'])->name('chat');
+Route::get('/fetch-contacts', [ChatController::class, 'fetchContacts'])->name('fetch.contacts');
 
 
 //particular jewel fetchign here
 Route::get('/jewel/{id}', [UserController::class,'show_jewe'])->name('jewel.show');
 
+
+// in admin part to display the details here
+Route::get('/manage_jewels',[JewelController::class,'manage'])->name('managejewels');
+
+// Show edit form for a specific jewel
+Route::get('/jewel/edit/{id}', [JewelController::class, 'edit']);
+
+// Update a specific jewel
+Route::post('/jewel/update/{id}', [JewelController::class, 'update']);
+
+// Delete a specific jewel
+Route::delete('/jewel/delete/{id}', [JewelController::class, 'destroy']);

@@ -11,7 +11,7 @@ class CustomqueriesController extends Controller
 {
     public function store_customqueries(Request $request)
 {
-    // Validate the incoming request data
+    // Validate incoming request data
     $validator = Validator::make($request->all(), [
         'jewel_id' => 'required|integer|exists:jewels,id',
         'user_id' => 'required|integer|exists:users,id',
@@ -20,6 +20,7 @@ class CustomqueriesController extends Controller
         'total_price' => 'required|integer',
         'mobile_number' => 'required|string|max:15',
         'customer_name' => 'required|string|max:255',
+        'razorpay_payment_id' => 'nullable|string', // Validate payment ID
     ]);
 
     // Check if validation fails
@@ -27,38 +28,54 @@ class CustomqueriesController extends Controller
         return response()->json(['success' => false, 'message' => $validator->errors()], 400);
     }
 
-    // Fetch the latest purchase for the user and jewel
-    $purchase = Purchase::where('user_id', $request->input('user_id'))
-        ->where('jewel_id', $request->input('jewel_id'))
-        ->latest()
+    // Check if a query already exists for the given jewel_id
+    $existingQuery = Customqueries::where('jewel_id', $request->input('jewel_id'))
+        ->where('user_id', $request->input('user_id'))
         ->first();
 
-    // Check if the purchase exists and get its status
-    $status = $purchase ? $purchase->status : 'pending'; // Default to 'pending' if no purchase found
+    if ($existingQuery) {
+        // If it exists, update the relevant fields as needed
+        $existingQuery->size = $request->input('size');
+        $existingQuery->quantity = $request->input('quantity');
+        $existingQuery->total_price = $request->input('total_price');
+        $existingQuery->mobile_number = $request->input('mobile_number');
+        $existingQuery->customer_name = $request->input('customer_name');
 
-    // Create a new instance of the Customqueries model
-    $storecustomquerie = new Customqueries();
-    $storecustomquerie->jewel_id = $request->input('jewel_id');
-    $storecustomquerie->user_id = $request->input('user_id');
-    $storecustomquerie->total_price = $request->input('total_price');
-    $storecustomquerie->customer_name = $request->input('customer_name');
-    $storecustomquerie->mobile_number = $request->input('mobile_number');
-    $storecustomquerie->size = $request->input('size');
-    $storecustomquerie->quantity = $request->input('quantity');
+        // Save the updated query
+        $existingQuery->save();
 
-    // Set status from the purchase
-    $storecustomquerie->status = $status;
+        // Return a response indicating the update
+        return response()->json([
+            'success' => true,
+            'message' => 'Custom query updated successfully',
+            'data' => $existingQuery
+        ], 200);
+    } else {
+        // Create a new instance of the Customqueries model
+        $storecustomquerie = new Customqueries();
+        $storecustomquerie->jewel_id = $request->input('jewel_id');
+        $storecustomquerie->user_id = $request->input('user_id');
+        $storecustomquerie->total_price = $request->input('total_price');
+        $storecustomquerie->customer_name = $request->input('customer_name');
+        $storecustomquerie->mobile_number = $request->input('mobile_number');
+        $storecustomquerie->size = $request->input('size');
+        $storecustomquerie->quantity = $request->input('quantity');
 
-    // Save the custom query
-    $storecustomquerie->save();
+        // Set initial status to pending
+        $storecustomquerie->status = 'pending';
 
-    // Return a success response
-    return response()->json([
-        'success' => true,
-        'message' => 'Custom query stored successfully',
-        'data' => $storecustomquerie
-    ], 200);
+        // Save the custom query
+        $storecustomquerie->save();
+
+        // Return a success response
+        return response()->json([
+            'success' => true,
+            'message' => 'Custom query stored successfully',
+            'data' => $storecustomquerie
+        ], 200);
+    }
 }
 
+    
 
 }

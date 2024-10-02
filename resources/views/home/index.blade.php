@@ -6,16 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gold Smith</title>
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
     <style>
-        /* Style the background section */
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            background-color: #ffffff;
+            color: #333;
+        }
+
         .bg-video-section {
             position: relative;
-            height: 100vh;
+            height: 600px;
             overflow: hidden;
         }
 
@@ -35,16 +41,26 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.5);
             z-index: 0;
         }
 
         .bg-video-section .container {
             position: relative;
             z-index: 1;
-            top: 34%;
+            top: 30%;
             text-align: center;
-            color: white;
+            color: #ffcc00; /* Gold color */
+        }
+
+        .bg-video-section h1 {
+            font-size: 4rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        }
+
+        .bg-video-section p {
+            font-size: 1.5rem;
+            margin-top: 1rem;
         }
 
         .features-section {
@@ -54,28 +70,74 @@
 
         .feature-card {
             border: none;
-            transition: transform 0.3s;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-radius: 10px;
+            overflow: hidden;
         }
 
         .feature-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-10px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
             cursor: pointer;
         }
 
         .footer {
-            background-color: #f7f7f7;
-            color: white;
+            background-color: #333;
+            color: #fff;
             padding: 20px 0;
         }
 
         .footer a {
-            color: white;
+            color: #ffcc00;
         }
 
         .footer a:hover {
             text-decoration: underline;
+        }
 
+        .owl-carousel .owl-stage-outer {
+            width: 100%;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .bg-video-section h1 {
+                font-size: 2.5rem;
+            }
+
+            .bg-video-section p {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Navbar Custom Background and Text */
+        .navbar-custom {
+            background-color: #ffcc00;
+            padding: 10px 20px;
+        }
+
+        .navbar-custom .navbar-brand {
+            color: #ffff;
+            font-weight: bold;
+            font-size: 24px;
+            font-family: 'Poppins', csans-serif;
+        }
+
+        .navbar-custom .nav-link {
+            color: #ffffff;
+            font-size: 24px;
+            margin-right: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-custom .nav-link:hover {
+            color: #000000;
+            text-decoration: underline;
+        }
+
+        /* Mobile View Styling */
+        .navbar-toggler-icon {
+            background-color: #ffffff;
         }
     </style>
 </head>
@@ -99,31 +161,41 @@
     <!-- Carousel Section -->
     <section class="my-5">
         <div class="container">
-            <div class="row">
-                <div class="slider-box owl-carousel">
-                    <!-- Carousel Card 1 -->
-                    <div class="item">
-                        <div class="card">
-                            <img src="images/gold2.avif" class="card-img-top" alt="Gold Image 1">
-                        </div>
+            <h1 class="text-center mb-5">Have a Look at Our Collection</h1>
+            <div class="slider-box owl-carousel">
+                <!-- Carousel Item 1 -->
+                <div class="item">
+                    <div class="card">
+                        <img src="https://images.unsplash.com/photo-1596942499930-c980d61ddd70?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
+                             alt="A brunette woman wearing pretty gold jewellery." class="card-img-top">
                     </div>
-                    <!-- Carousel Card 2 -->
-                    <div class="item">
-                        <div class="card">
-                            <img src="images/gold2.avif" class="card-img-top" alt="Gold Image 2">
-                        </div>
+                </div>
+                <!-- Carousel Item 2 -->
+                <div class="item">
+                    <div class="card">
+                        <img src="https://images.unsplash.com/photo-1596944946054-85fae2e50d5e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=634&q=80"
+                             alt="A blond woman wearing golden circle earrings." class="card-img-top">
                     </div>
-                    <!-- Carousel Card 3 -->
-                    <div class="item">
-                        <div class="card">
-                            <img src="images/gold2.avif" class="card-img-top" alt="Gold Image 3">
-                        </div>
+                </div>
+                <!-- Carousel Item 3 -->
+                <div class="item">
+                    <div class="card">
+                        <img src="https://images.unsplash.com/photo-1596944924616-7b38e7cfac36?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
+                             alt="Arms adorned with multiple gold rings and a bracelet." class="card-img-top">
                     </div>
-                    <!-- Carousel Card 4 -->
-                    <div class="item">
-                        <div class="card">
-                            <img src="images/gold2.avif" class="card-img-top" alt="Gold Image 4">
-                        </div>
+                </div>
+                <!-- Carousel Item 4 -->
+                <div class="item">
+                    <div class="card">
+                        <img src="https://images.unsplash.com/photo-1616413552922-aa3906103397?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
+                             alt="A woman wearing heart-shaped golden earrings." class="card-img-top">
+                    </div>
+                </div>
+                <!-- Carousel Item 5 -->
+                <div class="item">
+                    <div class="card">
+                        <img src="https://images.unsplash.com/photo-1612529328850-598a0e3a3e31?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=634&q=80"
+                             alt="A woman wearing golden circle earrings with pearls." class="card-img-top">
                     </div>
                 </div>
             </div>
@@ -167,15 +239,15 @@
     @include('home.footer')
 
     <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
     <script>
         $(document).ready(function () {
             $('.owl-carousel').owlCarousel({
                 loop: true,
                 nav: true,
-                dots: true,
+                dots: false,
                 margin: 20,
                 autoplay: true,
                 autoplayTimeout: 3000,

@@ -27,4 +27,6 @@ class UserQueries extends Model
         return $this->hasOne(CustomQueries::class, 'user_id'); // Adjust the foreign key as necessary
     }
 
+    
+
 }

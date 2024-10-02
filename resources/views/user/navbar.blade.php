@@ -15,7 +15,7 @@
                 <a class="nav-link" href="{{route('show_customization_queries')}}">Customization Status</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Query Status</a>
+                <a class="nav-link" href="{{url('userqueries/{id}')}}">Query Status</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{route('chat')}}">Messages</a>
@@ -47,7 +47,7 @@
     }
 
     .navbar-nav .nav-link:hover {
-        color: #ffc107; /* Gold color on hover */
+        color: #fff; /* Gold color on hover */
         cursor: pointer;
     }
 </style>
