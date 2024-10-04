@@ -179,4 +179,35 @@ class JewelController extends Controller
         return response()->json(['success' => true, 'message' => 'Jewel deleted successfully', compact('jewel')], 200);
     }
 
+
+    public function jewel_update(Request $request, $id)
+    {
+        // Validate the request
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric',
+            'type' => 'required|string',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $jewel = Jewel::findOrFail($id);
+        $jewel->name = $request->name;
+        $jewel->description = $request->description;
+        $jewel->price = $request->price;
+        $jewel->type = $request->type;
+
+        // Handle the image upload
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images'), $imageName);
+            $jewel->jewel_image = '/' . 'images/' . $imageName;
+        }
+
+        $jewel->save();
+
+        return response()->json(['success' => true, 'message' => 'Jewel updated successfully!', compact('jewel')]);
+    }
+
 }

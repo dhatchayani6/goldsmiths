@@ -84,6 +84,15 @@ Route::middleware('auth')->group(function () {
 });
 
 
-
-//all jewel 
 Route::get('/fetch_jewel',[JewelController::class,'fetch_jewel']);
+Route::get('/userqueries/{id}', [UserController::class, 'fetchUser_Queries'])->name('fetchuserqueries');
+
+
+// Show edit form for a specific jewel
+Route::get('/jewel/edit/{id}', [JewelController::class, 'jewel_edit']);
+
+// Update a specific jewel
+Route::put('/jewel/update/{id}', [JewelController::class, 'jewel_update']);
+
+// Delete a specific jewel
+Route::delete('/jewel/delete/{id}', [JewelController::class, 'destroy']);
