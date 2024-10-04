@@ -25,13 +25,13 @@
             width: 100%;
         }
         .navbar-light .navbar-nav .nav-link {
-            color: #ffff !important;
+            color: #000000 !important;
         }
         .navbar-light .navbar-nav .nav-link:hover {
             color: black !important;
         }
         .navbar-light .navbar-brand {
-            color: #fff !important;
+            color: #000000 !important;
         }
     </style>
 </head>

@@ -39,4 +39,15 @@
     .navbar-nav {
         align-items: center;
     }
+
+    .nav-link{
+            color: black !important;
+        }
+        .nav-link:hover{
+            color: black ;
+        }
+
+    .nav-item{
+        font-size: 20px;
+    }
 </style>

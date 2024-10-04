@@ -91,9 +91,9 @@
             color: #ffcc00;
         }
 
-        .footer a:hover {
+        /* .footer a:hover {
             text-decoration: underline;
-        }
+        } */
 
         .owl-carousel .owl-stage-outer {
             width: 100%;
@@ -117,14 +117,14 @@
         }
 
         .navbar-custom .navbar-brand {
-            color: #ffff;
-            font-weight: bold;
+            color: #000000;
+            /* font-weight: bold; */
             font-size: 24px;
             font-family: 'Poppins', csans-serif;
         }
 
         .navbar-custom .nav-link {
-            color: #ffffff;
+            color: #000000;
             font-size: 24px;
             margin-right: 15px;
             transition: color 0.3s ease;
@@ -132,7 +132,7 @@
 
         .navbar-custom .nav-link:hover {
             color: #000000;
-            text-decoration: underline;
+            /* text-decoration: underline; */
         }
 
         /* Mobile View Styling */

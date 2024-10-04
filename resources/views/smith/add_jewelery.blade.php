@@ -94,6 +94,12 @@
         .footer{
             background-color: rgba(0, 0, 0, 0.05);
         }
+        .nav-link{
+            color: black ;
+        }
+        .nav-link:hover{
+            color: black ;
+        }
     </style>
 </head>
 

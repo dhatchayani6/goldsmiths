@@ -77,5 +77,8 @@ Route::get('/jewel/status', [UserController::class, 'showJewelStatus'])->name('j
 Route::get('/get_purchase',[PurchaseController::class,'getpurchase'])->name('get_purchases');
 
 
-Route::get('/fetch-contacts', [ChatController::class, 'fetchContacts'])->name('fetch.contacts');
 
+Route::middleware('auth')->group(function () {
+    // Route for fetching contacts
+    Route::get('/fetch-contacts/{usertype}', [UserController::class, 'fetchContacts'])->name('fetch.contacts');
+});

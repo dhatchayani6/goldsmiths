@@ -155,14 +155,14 @@
         }
 
         .navbar-custom .navbar-brand {
-            color: #ffff;
-            font-weight: bold;
+            color: black;
+            /* font-weight: bold; */
             font-size: 24px;
-            font-family: 'Poppins', sans-serif;
+            font-family: sans-serif;
         }
 
         .navbar-custom .nav-link {
-            color: #ffffff;
+            color: #000000;
             font-size: 18px;
             margin-right: 15px;
             transition: color 0.3s ease;

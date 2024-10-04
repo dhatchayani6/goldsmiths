@@ -90,7 +90,7 @@ Route::post('/profile', [ProfileController::class, 'update'])->name('profile.upd
 
 //chat part
 Route::get('/chat', [ChatController::class, 'chat'])->name('chat');
-Route::get('/fetch-contacts', [ChatController::class, 'fetchContacts'])->name('fetch.contacts');
+Route::get('/fetch-contacts/{usertype}', [ChatController::class, 'fetchContacts'])->name('fetch.contacts');
 
 
 //particular jewel fetchign here

@@ -29,20 +29,31 @@ public function chat()
 
 public function fetchContacts(Request $request)
 {
+    \Log::info('User is checking fetchContacts', ['user' => Auth::user()]);
+
+    if (!Auth::check()) {
+        return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+    }
+
     $loggedInUser = Auth::user();
     
-    $users = User::all(); // or apply your logic to fetch users
+    \Log::info('Logged in user', ['usertype' => $loggedInUser->usertype]);
 
+    if (!$loggedInUser->usertype) {
+        return response()->json(['success' => false, 'message' => 'User type not found'], 400);
+    }
+
+    // Fetch users and filter
+    $users = User::all();
     $contacts = $users->filter(function($user) use ($loggedInUser) {
         return ($loggedInUser->usertype === 'admin' && $user->usertype !== 'admin') ||
-               ($loggedInUser->usertype !== 'admin' && $user->usertype === 'admin');
+               ($loggedInUser->usertype !== 'user' && $user->usertype === 'user');
     });
 
     return response()->json([
         'success' => true,
-        'data' => $contacts,
+        'data' => $contacts->values(),
     ]);
 }
-
 
 }

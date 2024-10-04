@@ -38,16 +38,16 @@
 
     .navbar-brand {
         font-size: 1.5rem;
-        color: #ffffff;
+        color: #000000;
     }
 
     .navbar-nav .nav-link {
-        color: #ffffff;
+        color: #000000;
         font-size: 1.1rem;
     }
 
     .navbar-nav .nav-link:hover {
-        color: #fff; /* Gold color on hover */
+        color: #000000; /* Gold color on hover */
         cursor: pointer;
     }
 </style>

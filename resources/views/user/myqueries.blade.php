@@ -19,11 +19,12 @@
 
         nav {
             background-color: #ffcc00;
+            padding: 0.5rem;
         }
 
         nav .navbar-brand,
         nav .nav-link {
-            color: #fff !important;
+            color: #000000 !important;
         }
 
         nav .nav-link:hover {

@@ -109,6 +109,9 @@
         .navbar-light .navbar-nav .nav-link:hover {
             color: black;
         }
+        .nav-link{
+            color: black !important;
+        }
     </style>
 </head>
 

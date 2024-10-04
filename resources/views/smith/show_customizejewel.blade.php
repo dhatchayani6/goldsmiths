@@ -60,6 +60,12 @@
             font-weight: bold;
             color: #e74c3c;
         }
+        .nav-link{
+            color: black ;
+        }
+        .nav-link:hover{
+            color: black ;
+        }
     </style>
 </head>
 

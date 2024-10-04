@@ -31,6 +31,12 @@
             display: flex;
             gap: 10px;
         }
+        .nav-link{
+            color: black ;
+        }
+        .nav-link:hover{
+            color: black ;
+        }
     </style>
 </head>
 

@@ -97,6 +97,12 @@
                 font-size: 14px;
             }
         }
+        .nav-link{
+            color: black ;
+        }
+        .nav-link:hover{
+            color: black ;
+        }
     </style>
 </head>
 

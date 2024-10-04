@@ -73,12 +73,12 @@ class UserController extends Controller
     }
 
     // Otherwise, return the view with jewel data
-    // return view('user.view', compact('jewel'));
-    return response()->json([
-        'success' => true,
-        'message' => 'Jewel retrived successfully',
-        'data' => $jewel
-    ]);
+    return view('user.view', compact('jewel'));
+    // return response()->json([
+    //     'success' => true,
+    //     'message' => 'Jewel retrived successfully',
+    //     'data' => $jewel
+    // ]);
 }
 
 

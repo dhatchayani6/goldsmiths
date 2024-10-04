@@ -79,8 +79,8 @@
         footer {
             text-align: center;
             padding: 10px;
-            background-color: #2c3e50;
-            color: white;
+            background-color: #f0f0f0;
+            color: black;
         }
 
         /* Responsive Design */

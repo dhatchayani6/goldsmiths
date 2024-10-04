@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         html,
@@ -66,7 +66,7 @@
         }
 
         .navbar-light .navbar-nav .nav-link {
-            color: #fff;
+            color: #000000;
         }
 
         .navbar-light .navbar-nav .nav-link:hover {
@@ -90,11 +90,11 @@
         }
 
         .navbar-light .navbar-brand {
-            color: #fff !important;
+            color: #000000 !important;
         }
 
         .nav-link {
-            color: #fff !important;
+            color: #000000 !important;
         }
     </style>
 </head>
