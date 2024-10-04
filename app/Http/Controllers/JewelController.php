@@ -8,6 +8,15 @@ use App\Models\Jewel;
 
 class JewelController extends Controller
 {
+
+    public function fetch_jewel(){
+        $fetchjewels=Jewel::all();
+        return response()->json([
+            'success' => true,
+            'message' => 'Jewelry added successfully!',
+            'data' => $fetchjewels
+        ], 201);
+    }
     public function showjewel_page()
     {
         return view('smith.add_jewelery');

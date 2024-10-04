@@ -82,3 +82,8 @@ Route::middleware('auth')->group(function () {
     // Route for fetching contacts
     Route::get('/fetch-contacts/{usertype}', [UserController::class, 'fetchContacts'])->name('fetch.contacts');
 });
+
+
+
+//all jewel 
+Route::get('/fetch_jewel',[JewelController::class,'fetch_jewel']);
