@@ -78,7 +78,7 @@ class JewelController extends Controller
                 'success' => true,
                 'message' => 'Jewelry added successfully!',
                 'data' => $jewelry
-            ], 201);
+            ], 200);
         } catch (\Exception $e) {
             // Handle any errors
             return response()->json([

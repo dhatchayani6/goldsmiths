@@ -98,7 +98,7 @@ Route::post('/jewel/jewelupdate/{id}', [JewelController::class, 'jewel_update'])
 Route::delete('/jewel/delete/{id}', [JewelController::class, 'destroy']);
 
 
-Route::get('/custom-queries', [UserQueriesController::class, 'getCustom_Queries'])->name('getcustomqueries');
+Route::get('/user-queries', [UserQueriesController::class, 'getCustom_Queries'])->name('getcustomqueries');
 Route::post('/query/accept/{id}', [UserQueriesController::class, 'accept']);
 Route::post('/query/reject/{id}', [UserQueriesController::class, 'reject']);
 Route::post('/query/customize-payment', [CustomqueriesController::class, 'store_customqueries'])->name('query.customizePayment');
