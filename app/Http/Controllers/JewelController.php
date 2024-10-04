@@ -9,8 +9,9 @@ use App\Models\Jewel;
 class JewelController extends Controller
 {
 
-    public function fetch_jewel(){
-        $fetchjewels=Jewel::all();
+    public function fetch_jewel()
+    {
+        $fetchjewels = Jewel::all();
         return response()->json([
             'success' => true,
             'message' => 'Jewelry added successfully!',
@@ -43,7 +44,7 @@ class JewelController extends Controller
             'jewelryWeight' => 'required|numeric',
             'jewelryPrice' => 'required|numeric|min:0',
             'jewelryDescription' => 'nullable|string',
-            'jewelryImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'jewelryImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validation rule
         ]);
 
         try {
@@ -57,7 +58,7 @@ class JewelController extends Controller
                 $imageName = time() . '.' . $image->getClientOriginalExtension();
 
                 // Define the target path for the image
-                $imagePath = '/' . 'images/' . $imageName;
+                $imagePath = '/' . 'images/' . $imageName; // Adjusted path
 
                 // Move the image to the 'public/images' directory
                 $image->move(public_path('images'), $imageName);
@@ -86,6 +87,7 @@ class JewelController extends Controller
             ], 500);
         }
     }
+
 
     public function show($id)
     {
@@ -176,7 +178,7 @@ class JewelController extends Controller
 
         $jewel->delete();
 
-        return response()->json(['success' => true, 'message' => 'Jewel deleted successfully', compact('jewel')], 200);
+        return response()->json(['success' => true, 'message' => 'Jewel deleted successfully', 'data'=>$jewel], 200);
     }
 
 
@@ -188,7 +190,7 @@ class JewelController extends Controller
             'description' => 'required|string',
             'price' => 'required|numeric',
             'type' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Image is optional
         ]);
 
         $jewel = Jewel::findOrFail($id);
@@ -207,7 +209,8 @@ class JewelController extends Controller
 
         $jewel->save();
 
-        return response()->json(['success' => true, 'message' => 'Jewel updated successfully!', compact('jewel')]);
+        return response()->json(['success' => true, 'message' => 'Jewel updated successfully!', 'jewel' => $jewel]);
     }
+
 
 }

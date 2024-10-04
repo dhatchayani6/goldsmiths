@@ -83,6 +83,8 @@
                 </div>
                 <div class="modal-body">
                     <form id="editJewelForm" enctype="multipart/form-data">
+                        @csrf
+                        
                         <input type="hidden" name="jewel_id">
                         <div class="form-group">
                             <label for="jewel-name">Name</label>

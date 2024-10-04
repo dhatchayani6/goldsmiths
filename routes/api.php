@@ -8,7 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\UserQueriesController;
 use App\Http\Controllers\JewelQueryController;
-use App\Http\Controllers\ChatController;
+use App\Http\Controllers\CustomqueriesController;
 
 
 
@@ -92,7 +92,13 @@ Route::get('/userqueries/{id}', [UserController::class, 'fetchUser_Queries'])->n
 Route::get('/jewel/edit/{id}', [JewelController::class, 'jewel_edit']);
 
 // Update a specific jewel
-Route::put('/jewel/update/{id}', [JewelController::class, 'jewel_update']);
+Route::post('/jewel/jewelupdate/{id}', [JewelController::class, 'jewel_update']);
 
 // Delete a specific jewel
 Route::delete('/jewel/delete/{id}', [JewelController::class, 'destroy']);
+
+
+Route::get('/custom-queries', [UserQueriesController::class, 'getCustom_Queries'])->name('getcustomqueries');
+Route::post('/query/accept/{id}', [UserQueriesController::class, 'accept']);
+Route::post('/query/reject/{id}', [UserQueriesController::class, 'reject']);
+Route::post('/query/customize-payment', [CustomqueriesController::class, 'store_customqueries'])->name('query.customizePayment');
