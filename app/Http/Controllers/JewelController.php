@@ -44,7 +44,7 @@ class JewelController extends Controller
             'jewelryWeight' => 'required|numeric',
             'jewelryPrice' => 'required|numeric|min:0',
             'jewelryDescription' => 'nullable|string',
-            'jewelryImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validation rule
+            'jewelryImage' => 'required|image|mimes:jpeg,png,jpg,gif', // Validation rule
         ]);
 
         try {
@@ -146,7 +146,7 @@ class JewelController extends Controller
             'description' => 'required|string',
             'price' => 'required|numeric',
             'type' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif',
         ]);
 
         $jewel = Jewel::findOrFail($id);

@@ -98,12 +98,13 @@ Route::get('/jewel/edit/{id}', [JewelController::class, 'jewel_edit']);
 Route::post('/jewel/jewelupdate/{id}', [JewelController::class, 'jewel_update']);
 
 // Delete a specific jewel
-Route::delete('/jewel/delete/{id}', [JewelController::class, 'destroy']);
+// Route::delete('/jewel/delete/{id}', [JewelController::class, 'destroy']);
+// In routes/api.php
+Route::delete('/jewel/delete/{id}', [JewelController::class, 'destroy'])->name('jewel.destroy');
+
 
 
 Route::get('/user-queries', [UserQueriesController::class, 'getCustom_Queries'])->name('getcustomqueries');
 Route::post('/query/accept/{id}', [UserQueriesController::class, 'accept']);
 Route::post('/query/reject/{id}', [UserQueriesController::class, 'reject']);
 Route::post('/query/customize-payment', [CustomqueriesController::class, 'store_customqueries'])->name('query.customizePayment');
-Route::get('/showcustomizationqueries/{id}',[UserController::class,'showcustomization_queries'])->name('show_customization_queries');
-Route::post('/add_purchase',[PurchaseController::class,'addjewel']);
