@@ -4,12 +4,11 @@ namespace App\Http\Controllers;
 
 use App;
 use App\Models\Customqueries;
-use App\Models\JewelQuery;
 use App\Models\Purchase;
 use Illuminate\Http\Request;
 use App\Models\Jewel;
 use Auth;
-use App\Models\UserQueries;
+use App\Models\JewelQuery;
 
 
 
@@ -124,14 +123,61 @@ class UserController extends Controller
         return view('user.query', compact('userQueries')); // Change 'your-view-name' to your actual view name
     }
 
-    public function fetchUser_Queries()
+    public function fetchUser_Queries($id)
     {
         // Fetch queries based on the authenticated user's ID
-        $userQueries = JewelQuery::where('user_id', auth()->id())->get();
+        $userQueries = JewelQuery::where('user_id',$id)->get();
 
         // Return the view with the user's queries
-        return view('user.query', compact('userQueries')); // Change 'your-view-name' to your actual view name
+        // return view('user.query', compact('userQueries')); // Change 'your-view-name' to your actual view name
+        return response()->json(['success'=>true,'message'=>'fetched user queries','data'=>$userQueries]);
     }
+
+
+    public function showJewel_Status($id)
+    {
+        // Fetch the jewel based on the jewel ID and the user ID
+        $jewelle = JewelQuery::where('user_id', $id)->first();
+
+        // Check if a record was found
+        if ($jewelle) {
+            // Return the jewel status if the user exists with a 200 (success) status
+            return response()->json([
+                'success' => true,
+                'message' => 'Status of jewel fetched successfully',
+                'data' => $jewelle
+            ], 200); // HTTP status 200 for success
+        } else {
+            // Return a "no user found" message with a 500 (failure) status
+            return response()->json([
+                'success' => false,
+                'message' => 'No user found with the given ID'
+            ], 500); // HTTP status 500 for failure
+        }
+    }
+
+    public function showcustomization_queries($id)
+    {
+        // Fetch the customization query based on the provided user_id ($id)
+        $showcustomizationqueries = Customqueries::where('user_id', $id)->get();
+    
+        // Check if queries were found
+        if ($showcustomizationqueries->isNotEmpty()) {
+            // Success: Return a success response with the query data
+            return response()->json([
+                'success' => true,
+                'message' => 'Customization queries fetched successfully',
+                'data' => $showcustomizationqueries
+            ], 200); // HTTP 200 for success
+        } else {
+            // Failure: No query found, return a failure message
+            return response()->json([
+                'success' => false,
+                'message' => 'No customization queries found for the given user ID'
+            ], 500); // HTTP 404 for not found
+        }
+    }
+    
 
 
 

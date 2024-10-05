@@ -15,7 +15,6 @@ use App\Models\Customqueries;
 class PurchaseController extends Controller
 {
 
-
     public function storepurchasedetails(Request $request)
     {
         // Set default payment method to 'razorpay'
@@ -34,7 +33,6 @@ class PurchaseController extends Controller
             'size' => 'nullable|string|max:255',
             'quantity' => 'nullable|integer|min:1',
             'total_price' => 'required|numeric',
-            'razorpay_payment_id' => 'required|string|max:255',
             'user_id' => 'required|integer|exists:users,id',
         ]);
     
@@ -57,7 +55,6 @@ class PurchaseController extends Controller
         $purchase->address = $request->input('address');
         $purchase->payment_method = $request->input('payment_method');
         $purchase->user_id = $request->input('user_id');
-        $purchase->razorpay_payment_id = $request->input('razorpay_payment_id');
         $purchase->status = 'success'; // Update status to success
     
         // Save the Purchase record

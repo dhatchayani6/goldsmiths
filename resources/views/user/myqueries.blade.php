@@ -105,6 +105,7 @@
                     <tr>
                         <td>{{ $customizequeries->id }}</td>
                         <td>{{ $customizequeries->jewel_id }}</td>
+
                         <td>{{ $customizequeries->user_id }}</td>
                         <td>{{ $customizequeries->status }}</td>
                         <td>${{ number_format($customizequeries->total_price, 2) }}</td>
