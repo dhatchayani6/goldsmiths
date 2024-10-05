@@ -54,7 +54,7 @@ class UserQueriesController extends Controller
         $validated = $request->validate([
             'jewel_id' => 'required|exists:jewels,id',
             'user_id' => 'required|exists:users,id',
-            'image_url' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validation for image file
+            'image_url' => 'required|image|mimes:jpeg,png,jpg,gif', // Validation for image file
             'query' => 'required|string',
         ]);
 
