@@ -43,11 +43,13 @@ public function fetchContacts(Request $request)
         return response()->json(['success' => false, 'message' => 'User type not found'], 400);
     }
 
-    // Fetch users and filter
+    // Fetch users and filter based on usertype
     $users = User::all();
     $contacts = $users->filter(function($user) use ($loggedInUser) {
-        return ($loggedInUser->usertype === 'admin' && $user->usertype !== 'admin') ||
-               ($loggedInUser->usertype !== 'user' && $user->usertype === 'user');
+        // Show the admin if the logged-in user is a regular user
+        // Show regular users if the logged-in user is an admin
+        return ($loggedInUser->usertype === 'user' && $user->usertype === 'admin') ||
+               ($loggedInUser->usertype === 'admin' && $user->usertype !== 'admin');
     });
 
     return response()->json([
@@ -55,6 +57,7 @@ public function fetchContacts(Request $request)
         'data' => $contacts->values(),
     ]);
 }
+
 
 
 

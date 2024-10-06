@@ -11,7 +11,7 @@
     <style>
         body {
             background-color: #f8f9fa;
-            font-family:sans-serif;
+            font-family: 'Inter', sans-serif;
             color: #495057;
             display: flex;
             flex-direction: column;
@@ -47,6 +47,13 @@
             padding: 10px;
             cursor: pointer;
             transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-container img {
+            border-radius: 50%;
+            margin-right: 10px;
         }
 
         .contact-container:hover {
@@ -70,11 +77,12 @@
             bottom: 0;
             width: 100%;
         }
-        li{
+
+        li {
             list-style-type: none;
         }
 
-        .navbar-nav .nav-link{
+        .navbar-nav .nav-link {
             color: black !important;
         }
     </style>
@@ -140,10 +148,25 @@
         function selectUser(userId) {
             const otherUser = @json($users).find(user => user.id === userId);
             if (otherUser) {
-                const conversation = session.getOrCreateConversation(Talk.oneOnOneId(session.me, new Talk.User({ id: otherUser.id, name: otherUser.name })));
+                console.log('Selected user:', otherUser);
+
+                // Create a Talk.User instance for the selected user
+                const otherUserTalk = new Talk.User({
+                    id: otherUser.id,
+                    name: otherUser.name,
+                    email: otherUser.email // Add any other required fields
+                });
+
+                // Create or get the conversation
+                const conversation = session.getOrCreateConversation(Talk.oneOnOneId(session.me, otherUserTalk));
                 conversation.setParticipant(session.me);
-                conversation.setParticipant(new Talk.User({ id: otherUser.id, name: otherUser.name }));
+                conversation.setParticipant(otherUserTalk);
+
+                // Select the conversation in the chatbox
                 chatbox.select(conversation);
+                console.log('Conversation selected:', conversation);
+            } else {
+                console.error('User not found:', userId);
             }
         }
 
@@ -154,7 +177,7 @@
                 const usertype = "{{ $loggedInUser->usertype }}"; // Get the usertype from loggedInUser
 
                 $.ajax({
-                    url: '{{ route('fetch.contacts', '') }}' + '/' + usertype,
+                    url: '{{ route('fecth-contact', '') }}' + '/' + usertype,
                     type: 'GET',
                     success: function (response) {
                         console.log('Response:', response); // Log the entire response
@@ -164,36 +187,32 @@
                             $('#contacts-list').append('<h2>Contacts</h2>');
 
                             response.data.forEach(function (user) {
-                                // Show all users for admins
-                                if (usertype === 'admin') {
+                                // If the logged-in user is an admin, show all users
+                                if (usertype === 'admin' && user.usertype === 'user') {
                                     const contactHtml = `
                                         <div class="contact-container" onclick="selectUser(${user.id})">
-                                            <div class="contact-name">${user.name ?? 'Unknown'}</div>
                                             <span>${user.email ?? 'No email'}</span>
                                         </div>
                                     `;
                                     $('#contacts-list').append(contactHtml);
                                 }
-                                // Show only non-admin users for regular users
-                                else if (usertype === 'user') {
-                                    if (user.usertype !== 'admin') {
-                                        const contactHtml = `
-                                            <div class="contact-container" onclick="selectUser(${user.id})">
-                                                <div class="contact-name">${user.name ?? 'Unknown'}</div>
-                                                <span>${user.email ?? 'No email'}</span>
-                                            </div>
-                                        `;
-                                        $('#contacts-list').append(contactHtml);
-                                    }
+                                // If the logged-in user is not an admin, show only admin users in the list
+                                else if (usertype === 'user' && user.usertype === 'admin') {
+                                    const contactHtml = `
+                                        <div class="contact-container" onclick="selectUser(${user.id})">
+                                            <span>${user.email ?? 'No email'}</span>
+                                            <span class="admin-label"> (Admin)</span>
+                                        </div>
+                                    `;
+                                    $('#contacts-list').append(contactHtml);
                                 }
                             });
                         } else {
-                            console.error('Failed to load contacts:', response.message || 'No data available');
+                            console.error('No contacts found or invalid response format');
                         }
                     },
                     error: function (xhr, status, error) {
-                        console.error('Error loading contacts:', error);
-                        console.error('XHR response:', xhr.responseText); // Log the response for debugging
+                        console.error('Error fetching contacts:', error);
                     }
                 });
             }

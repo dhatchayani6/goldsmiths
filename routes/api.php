@@ -110,5 +110,5 @@ Route::post('/query/reject/{id}', [UserQueriesController::class, 'reject']);
 Route::post('/query/customize-payment', [CustomqueriesController::class, 'store_customqueries'])->name('query.customizePayment');
 
 
-Route::get('/fetch-contact',[ChatController::class,'fetch_Contacts'])->name('fecth-contact');
+Route::get('/fetch-contact/{usertype}',[ChatController::class,'fetch_Contacts'])->name('fecth-contact');
 Route::get('/android_chat/{user1_id}/{user2_id}',[ChatController::class,'android_chat']);
