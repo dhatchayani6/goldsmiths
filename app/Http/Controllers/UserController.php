@@ -177,6 +177,17 @@ class UserController extends Controller
             ], 500); // HTTP 404 for not found
         }
     }
+
+
+
+    public function show_customization_queries()
+    {
+        // Fetch the customization query based on the provided user_id ($id)
+        $showcustomizationqueries = Customqueries::all();
+        return response()->json(['sucess'=>true,'message'=>'customiztion queris fetched usccessfully','data'=>$showcustomizationqueries]);
+
+       
+    }
     
 
 

@@ -115,7 +115,7 @@ class JewelController extends Controller
         $query->status = 'Accepted'; // Adjust according to your status field
         $query->save();
 
-        return response()->json(['success' => true]);
+        return response()->json(['success' => true,'message'=>'query accepted successfuly','data'=>$query]);
     }
 
     public function reject($id)
@@ -124,7 +124,7 @@ class JewelController extends Controller
         $query->status = 'Rejected'; // Adjust according to your status field
         $query->save();
 
-        return response()->json(['success' => true]);
+        return response()->json(['success' => true,'message'=>'query rejected successfuly','data'=>$query]);
     }
 
     public function edit($id)
@@ -213,4 +213,8 @@ class JewelController extends Controller
     }
 
 
+    public function getuserqueries(){
+        $fetchuserqueries=JewelQuery::all();
+        return response()->json(['success'=>true,'message'=>'user queri fected successfully','data'=>$fetchuserqueries]);
+    }
 }

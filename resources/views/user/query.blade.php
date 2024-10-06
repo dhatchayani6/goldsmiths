@@ -49,7 +49,7 @@
 
     <div class="container mt-5">
         <h1 class="mb-4">User Queries Status</h1>
-w
+
         <table class="table table-bordered" id="queriesTable">
             <thead>
                 <tr>

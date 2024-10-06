@@ -51,8 +51,8 @@ Route::post( '/jewel_store', action: [JewelController::class, 'store_jewel'])->n
 Route::get('/jewel/queries', [JewelController::class, 'showQueries'])->name('jewel.queries');
 Route::post('/query/customize-payment', [JewelController::class, 'customizePayment'])->name('query.customizePayment');
 
-Route::post('/queries/{id}/accept', [JewelController::class, 'accept'])->name('queries.accept');
-Route::post('/queries/{id}/reject', [JewelController::class, 'reject'])->name('queries.reject');
+Route::post('/queries/accept/{id}', [JewelController::class, 'accept'])->name('queries.accept');
+Route::post('/queries/reject/{id}', [JewelController::class, 'reject'])->name('queries.reject');
 Route::post('/jewel/{id}/query', [JewelQueryController::class, 'submitQuery'])->name('jewel.query');
 
 //userpart

@@ -19,7 +19,7 @@ class PurchaseController extends Controller
     {
         // Set default payment method to 'razorpay'
         $request->merge(['payment_method' => 'razorpay']);
-    
+
         // Validation rules
         $validator = Validator::make($request->all(), [
             'jewel_id' => 'required|integer|exists:jewels,id',
@@ -36,12 +36,12 @@ class PurchaseController extends Controller
             'razorpay_payment_id' => 'required|string|max:255',
             'user_id' => 'required|integer|exists:users,id',
         ]);
-    
+
         // Handle validation errors
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-    
+
         // Create a new Purchase record
         $purchase = new Purchase();
         $purchase->jewel_id = $request->input('jewel_id');
@@ -58,20 +58,20 @@ class PurchaseController extends Controller
         $purchase->user_id = $request->input('user_id');
         $purchase->razorpay_payment_id = $request->input('razorpay_payment_id');
         $purchase->status = 'success'; // Update status to success
-    
+
         // Save the Purchase record
         $purchase->save();
-    
+
         // Update the corresponding Customqueries record
         $customQuery = Customqueries::where('user_id', $request->input('user_id'))
             ->where('jewel_id', $request->input('jewel_id'))
             ->first();
-    
+
         if ($customQuery) {
             $customQuery->status = 'success'; // Update the status
             $customQuery->save(); // Save the changes
         }
-    
+
         // Return a success response with the purchase data
         return response()->json([
             'success' => true,
@@ -79,7 +79,7 @@ class PurchaseController extends Controller
             'data' => $purchase
         ], 200);
     }
-    
+
 
 
 
@@ -134,20 +134,33 @@ class PurchaseController extends Controller
 
 
     public function getpurchase(Request $request)
-{
-    $fetchpurchase = Purchase::all(); // Fetch all purchases
+    {
+        $fetchpurchase = Purchase::all(); // Fetch all purchases
 
-    // Check if the request is AJAX
-    if ($request->ajax()) {
-        return response()->json([
-            'success' => true,
-            'message' => 'Payment fetched successfully',
-            'data' => $fetchpurchase
-        ]);
+        // Check if the request is AJAX
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Payment fetched successfully',
+                'data' => $fetchpurchase
+            ]);
+        }
+
+        // If not an AJAX request, return a view (if needed)
+        return view('smith.payment-status', compact('fetchpurchase'));
     }
 
-    // If not an AJAX request, return a view (if needed)
-    return view('smith.payment-status', compact('fetchpurchase'));
-}
+
+
+    public function get_purchase()
+    {
+        $fetchpurchase = Purchase::all(); // Fetch all purchases
+
+        
+
+        // If not an AJAX request, return a view (if needed)
+        return response()->json(['success' => true, 'message' => 'payment status fetched successfully', 'data' => $fetchpurchase]);
+    }
+
 
 }

@@ -9,6 +9,9 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\UserQueriesController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CustomqueriesController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\JewelQueryController;
+
 
 
 
@@ -104,11 +107,27 @@ Route::delete('/jewel/delete/{id}', [JewelController::class, 'destroy'])->name('
 
 
 
-Route::get('/user-queries', [UserQueriesController::class, 'getCustom_Queries'])->name('getcustomqueries');
+Route::get('/custom-queries', [UserQueriesController::class, 'getCustom_Queries'])->name('getcustomqueries');
 Route::post('/query/accept/{id}', [UserQueriesController::class, 'accept']);
 Route::post('/query/reject/{id}', [UserQueriesController::class, 'reject']);
 Route::post('/query/customize-payment', [CustomqueriesController::class, 'store_customqueries'])->name('query.customizePayment');
 
+Route::get('/user-queries',[JewelController::class,'getuserqueries']);
+Route::post('/queries/accept/{id}', [JewelController::class, 'accept'])->name('queries.accept');
+Route::post('/queries/reject/{id}', [JewelController::class, 'reject'])->name('queries.reject');
 
 Route::get('/fetch-contact/{usertype}',[ChatController::class,'fetch_Contacts'])->name('fecth-contact');
 Route::get('/android_chat/{user1_id}/{user2_id}',[ChatController::class,'android_chat']);
+
+Route::get('/fetch_payment',[PurchaseController::class,'get_purchase']);
+
+
+
+Route::get('/profile/{id}', [ProfileController::class, 'profile_show']); // Display the profile
+Route::post('/profile/update/{id}', [ProfileController::class, 'profile_update']); // Update profile info
+
+
+Route::post('/jewel/query/{id}', [JewelQueryController::class, 'submit_Query'])->name('jewel.query');
+
+Route::get('/showcustomization_queries',[UserController::class,'show_customization_queries'])->name('show_customization_queries');
+
