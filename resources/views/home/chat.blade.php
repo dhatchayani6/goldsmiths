@@ -188,7 +188,7 @@
 
                             response.data.forEach(function (user) {
                                 // If the logged-in user is an admin, show all users
-                                if (usertype === 'admin' && user.usertype === 'user') {
+                                if (usertype === 'admin' && user.usertype === 'use') {
                                     const contactHtml = `
                                         <div class="contact-container" onclick="selectUser(${user.id})">
                                             <span>${user.email ?? 'No email'}</span>
