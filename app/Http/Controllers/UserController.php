@@ -180,14 +180,19 @@ class UserController extends Controller
 
 
 
-    public function show_customization_queries()
-    {
-        // Fetch the customization query based on the provided user_id ($id)
-        $showcustomizationqueries = Customqueries::all();
-        return response()->json(['sucess'=>true,'message'=>'customiztion queris fetched usccessfully','data'=>$showcustomizationqueries]);
+    public function show_customization_queries($user_id)
+{
+    // Fetch the customization queries based on the provided user_id
+    $showcustomizationqueries = Customqueries::where('user_id', $user_id)->get();
 
-       
-    }
+    // Return the result as JSON response
+    return response()->json([
+        'success' => true,
+        'message' => 'Customization queries fetched successfully',
+        'data' => $showcustomizationqueries
+    ]);
+}
+
     
 
 

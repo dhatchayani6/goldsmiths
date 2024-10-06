@@ -131,3 +131,4 @@ Route::post('/jewel/query/{id}', [JewelQueryController::class, 'submit_Query'])-
 
 Route::get('/showcustomization_queries',[UserController::class,'show_customization_queries'])->name('show_customization_queries');
 
+Route::get('/showcustomization_queries/{id}',[UserController::class,'show_customization_queries'])->name('show_customization_queries');
