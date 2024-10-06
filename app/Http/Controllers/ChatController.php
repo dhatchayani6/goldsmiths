@@ -56,4 +56,65 @@ public function fetchContacts(Request $request)
     ]);
 }
 
+
+
+public function fetch_Contacts(Request $request)
+{
+    // Log the action for debugging
+    \Log::info('Fetching contacts', ['input' => $request->all()]);
+
+    // Get the usertype filter from the request
+    $filterUsertype = $request->input('usertype');
+
+    // Fetch all users
+    $users = User::all();
+
+    // Filter users based on the provided usertype
+    if ($filterUsertype) {
+        $contacts = $users->filter(function($user) use ($filterUsertype) {
+            // If usertype is 'user', return only 'admin' users
+            if ($filterUsertype === 'user') {
+                return $user->usertype === 'admin';
+            }
+            // If usertype is 'admin', return only 'user' users
+            elseif ($filterUsertype === 'admin') {
+                return $user->usertype === 'user';
+            }
+            // Otherwise, no filtering
+            return false;
+        });
+    } else {
+        // If no filter is provided, return all users
+        $contacts = $users;
+    }
+
+    // Return the response as JSON
+    return response()->json([
+        'success' => true,
+        'data' => $contacts->values(),
+    ]);
+}
+
+
+public function android_chat($user1_id, $user2_id)
+{
+    // Get user1 and user2 by their IDs, or return a 404 if not found
+    $user1 = User::find($user1_id);
+    $user2 = User::find($user2_id);
+
+    // Check if either user is missing
+    if (!$user1 || !$user2) {
+        return abort(404, 'One or both users not found.');
+    }
+
+    // Log user data for debugging purposes
+    \Log::info('User1:', ['id' => $user1->id, 'name' => $user1->name]);
+    \Log::info('User2:', ['id' => $user2->id, 'name' => $user2->name]);
+
+    // Return the chat view with the two users
+    return view('home.androidchat', compact('user1', 'user2'));
+}
+
+
+
 }

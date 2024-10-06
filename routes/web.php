@@ -108,3 +108,6 @@ Route::post('/jewel/update/{id}', [JewelController::class, 'update']);
 
 // Delete a specific jewel
 Route::delete('/jewel/delete/{id}', [JewelController::class, 'destroy']);
+
+
+Route::get('/android_chat/{user1_id}/{user2_id}',[ChatController::class,'android_chat']);

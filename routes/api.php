@@ -7,7 +7,7 @@ use App\Http\Controllers\JewelController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\UserQueriesController;
-use App\Http\Controllers\JewelQueryController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CustomqueriesController;
 
 
@@ -83,7 +83,7 @@ Route::get('/get_purchase',[PurchaseController::class,'getpurchase'])->name('get
 
 Route::middleware('auth')->group(function () {
     // Route for fetching contacts
-    Route::get('/fetch-contacts/{usertype}', [UserController::class, 'fetchContacts'])->name('fetch.contacts');
+    Route::get('/fetch-contacts/{usertype}', [UserController::class, 'fetch_Contacts'])->name('fetch.contacts');
 });
 
 
@@ -108,3 +108,7 @@ Route::get('/user-queries', [UserQueriesController::class, 'getCustom_Queries'])
 Route::post('/query/accept/{id}', [UserQueriesController::class, 'accept']);
 Route::post('/query/reject/{id}', [UserQueriesController::class, 'reject']);
 Route::post('/query/customize-payment', [CustomqueriesController::class, 'store_customqueries'])->name('query.customizePayment');
+
+
+Route::get('/fetch-contact',[ChatController::class,'fetch_Contacts'])->name('fecth-contact');
+Route::get('/android_chat/{user1_id}/{user2_id}',[ChatController::class,'android_chat']);
