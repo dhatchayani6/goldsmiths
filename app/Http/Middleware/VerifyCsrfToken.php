@@ -13,6 +13,10 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         'jewel/delete/*',
+        'query/accept/*',
+        'query/reject/*',
+        'queries/accept/*',
+        'queries/reject/*',
         'api/*',
     ];
 }
