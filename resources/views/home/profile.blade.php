@@ -241,7 +241,7 @@
         });
 
         document.getElementById('profileForm').addEventListener('submit', function (event) {
-            event.preventDefault(); // Prevent default form submission
+            event.preventDefault(); // Prevent default form submissiown
 
             const formData = new FormData(this); // Serialize the form data
 
